@@ -1,0 +1,64 @@
+{% trans_default_domain 'form' %}
+
+{% if edit is defined and edit is same as(true) %}
+    {% set button_trans_key = 'form.submit.update' %}
+{% else %}
+    {% set button_trans_key = 'form.submit.create' %}
+{% endif %}
+
+{{ form_errors(form) }}
+{{ form_start(form, {
+    'attr': {
+        'id': form.vars.id
+    }
+}) }}
+<h2>{{ 'form.company.title'|trans }}</h2>
+<div>
+    {{ form_errors(form.name) }}
+    {{ form_label(form.name) }}
+    {{ form_widget(form.name) }}
+</div>
+{% if form.siret is defined %}
+<div>
+    {{ form_errors(form.siret) }}
+    {{ form_errors(form.siret.siren) }}
+    {{ form_label(form.siret.siren) }}
+    {{ form_widget(form.siret.siren) }}
+
+    {{ form_errors(form.siret.nic) }}
+    {{ form_label(form.siret.nic) }}
+    {{ form_widget(form.siret.nic) }}
+</div>
+{% endif %}
+
+<h2>{{ 'form.address.title'|trans }}</h2>
+<div>
+    {{ form_errors(form.address.streetNumber) }}
+    {{ form_label(form.address.streetNumber) }}
+    {{ form_widget(form.address.streetNumber) }}
+</div>
+<div>
+    {{ form_errors(form.address.street) }}
+    {{ form_label(form.address.street) }}
+    {{ form_widget(form.address.street) }}
+</div>
+<div>
+    {{ form_errors(form.address.postalCode) }}
+    {{ form_label(form.address.postalCode) }}
+    {{ form_widget(form.address.postalCode) }}
+</div>
+<div>
+    {{ form_errors(form.address.city) }}
+    {{ form_label(form.address.city) }}
+    {{ form_widget(form.address.city) }}
+</div>
+<div>
+    {{ form_errors(form.address.country) }}
+    {{ form_label(form.address.country) }}
+    {{ form_widget(form.address.country) }}
+</div>
+
+{{ form_widget(form._token) }}
+
+<input type="submit" value="{{ button_trans_key|trans }}"/>
+{{ form_end(form) }}
