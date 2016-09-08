@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="none" target-language="fr" datatype="plaintext" original="file.ext">
+        <body>
+            <!-- Common -->
+            <trans-unit id="form_submit_create">
+                <source>form.submit.create</source>
+                <target>Créer</target>
+            </trans-unit>
+            <trans-unit id="form_submit_update">
+                <source>form.submit.update</source>
+                <target>Mettre à jour</target>
+            </trans-unit>
+
+            <!-- Company -->
+            <trans-unit id="form_company_title">
+                <source>form.company.title</source>
+                <target>Entreprise</target>
+            </trans-unit>
+            <trans-unit id="form_company_name">
+                <source>form.company.name</source>
+                <target>Nom</target>
+            </trans-unit>
+
+            <!-- Company -->
+            <trans-unit id="form_siret_siren">
+                <source>form.siret.siren</source>
+                <target>SIREN</target>
+            </trans-unit>
+            <trans-unit id="form_siret_nic">
+                <source>form.siret.nic</source>
+                <target>NIC</target>
+            </trans-unit>
+
+            <!-- Address -->
+            <trans-unit id="form_address_title">
+                <source>form.address.title</source>
+                <target>Adresse</target>
+            </trans-unit>
+            <trans-unit id="form_address_streetNumber">
+                <source>form.address.streetNumber</source>
+                <target>Numéro</target>
+            </trans-unit>
+            <trans-unit id="form_address_street">
+                <source>form.address.street</source>
+                <target>Rue</target>
+            </trans-unit>
+            <trans-unit id="form_address_postalCode">
+                <source>form.address.postalCode</source>
+                <target>Code Postal</target>
+            </trans-unit>
+            <trans-unit id="form_address_city">
+                <source>form.address.city</source>
+                <target>Ville</target>
+            </trans-unit>
+            <trans-unit id="form_address_country">
+                <source>form.address.country</source>
+                <target>Pays</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

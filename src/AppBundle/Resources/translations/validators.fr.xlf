@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <!-- Company -->
+            <trans-unit id="error_company_already_exists">
+                <source>error.company.already_exists</source>
+                <target>Cette entreprise semble déjà existante.</target>
+            </trans-unit>
+
+            <!-- Address -->
+            <trans-unit id="zip_code_message">
+                <source>error.address.zipcode</source>
+                <target>Ce code postal ne semble pas valide.</target>
+            </trans-unit>
+
+            <!-- Siret -->
+            <trans-unit id="error_siret_nic_max_length">
+                <source>error.siret.nic.max_length</source>
+                <target>Le NIC ne peut contenir que {{ limit }} chiffres.</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

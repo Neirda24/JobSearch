@@ -1,0 +1,7 @@
+services:
+    app.form.company:
+        class: AppBundle\Form\CompanyType
+        arguments:
+            - "@security.authorization_checker"
+        tags:
+            - { name: form.type }
