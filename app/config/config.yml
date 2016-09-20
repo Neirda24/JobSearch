@@ -72,3 +72,18 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+fos_user:
+    db_driver: orm
+    firewall_name: main
+    user_class: AppBundle\Entity\User
+    from_email:
+        address:        no-reply@jobsearch.robischae.fr
+        sender_name:    JobSearch
+    registration:
+        confirmation:
+            enabled:    true
+            template:   FOSUserBundle:Registration:email.txt.twig
+    resetting:
+        email:
+            template:   FOSUserBundle:Resetting:email.txt.twig

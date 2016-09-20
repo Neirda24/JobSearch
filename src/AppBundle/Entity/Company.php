@@ -4,10 +4,11 @@ namespace AppBundle\Entity;
 
 use AppBundle\Entity\Common\Address;
 use AppBundle\Entity\Common\Siret;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\UniqueConstraint;
-use Symfony\Component\Validator\Constraints as Assert;
 use SLLH\IsoCodesValidator\Constraints as IsoCodesAssert;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(
@@ -56,6 +57,22 @@ class Company
      * @var Siret
      */
     private $siret;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\User", mappedBy="company")
+     * @Assert\Valid(traverse=true)
+     *
+     * @var User[]
+     */
+    private $collaborators;
+    
+    /**
+     * Company constructor.
+     */
+    public function __construct()
+    {
+        $this->collaborators = new ArrayCollection();
+    }
     
     /**
      * @return string
@@ -111,5 +128,43 @@ class Company
     public function setSiret(Siret $siret)
     {
         $this->siret = $siret;
+    }
+    
+    /**
+     * @return User[]
+     */
+    public function getCollaborators()
+    {
+        return $this->collaborators;
+    }
+    
+    /**
+     * @param User $collaborator
+     *
+     * @return bool
+     */
+    public function hasCollaborator(User $collaborator)
+    {
+        return $this->collaborators->contains($collaborator);
+    }
+    
+    /**
+     * @param User $collaborator
+     */
+    public function addCollaborator(User $collaborator)
+    {
+        if (!$this->hasCollaborator($collaborator)) {
+            $this->collaborators->add($collaborator);
+        }
+    }
+    
+    /**
+     * @param User $collaborator
+     */
+    public function removeCollaborator(User $collaborator)
+    {
+        if ($this->hasCollaborator($collaborator)) {
+            $this->collaborators->removeElement($collaborator);
+        }
     }
 }
