@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="none" target-language="fr" datatype="plaintext" original="file.ext">
+        <body>
+            <!-- Company -->
+            <trans-unit id="company_title">
+                <source>company.title</source>
+                <target>Entreprises</target>
+            </trans-unit>
+            <trans-unit id="company_list">
+                <source>company.list</source>
+                <target>Liste</target>
+            </trans-unit>
+            <trans-unit id="company_create">
+                <source>company.create</source>
+                <target>Créer</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

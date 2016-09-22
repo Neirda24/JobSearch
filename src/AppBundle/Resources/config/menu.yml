@@ -1,0 +1,8 @@
+services:
+    app.menu_builder.main:
+        class: AppBundle\Menu\MenuBuilder
+        arguments: ["@knp_menu.factory", "@security.authorization_checker"]
+        tags:
+            - { name: knp_menu.menu_builder, method: createMainMenu, alias: main }
+            - { name: knp_menu.menu_builder, method: createLoginMenu, alias: login }
+

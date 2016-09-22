@@ -6,6 +6,7 @@ use AppBundle\Entity\Company;
 use AppBundle\Form\CompanyType;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class CompanyController extends AbstractController
@@ -27,6 +28,7 @@ class CompanyController extends AbstractController
     
     /**
      * @Route("/company/create", name="company_create", methods={"GET", "POST"})
+     * @Security("is_granted('ROLE_USER')")
      */
     public function createAction(Request $request)
     {
