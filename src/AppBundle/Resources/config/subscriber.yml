@@ -1,0 +1,7 @@
+services:
+    app.subscriber.company:
+        class: AppBundle\Subscriber\Doctrine\Company
+        arguments: ["@security.token_storage"]
+        tags:
+            - { name: doctrine.event_listener, event: prePersist }
+

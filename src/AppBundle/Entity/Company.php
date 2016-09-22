@@ -67,6 +67,15 @@ class Company
     private $collaborators;
     
     /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="submittedCompanies")
+     * @ORM\JoinColumn(nullable=false)
+     * @Assert\Valid(traverse=true)
+     *
+     * @var User
+     */
+    private $submittedFrom;
+    
+    /**
      * Company constructor.
      */
     public function __construct()
@@ -166,5 +175,21 @@ class Company
         if ($this->hasCollaborator($collaborator)) {
             $this->collaborators->removeElement($collaborator);
         }
+    }
+    
+    /**
+     * @return User
+     */
+    public function getSubmittedFrom()
+    {
+        return $this->submittedFrom;
+    }
+    
+    /**
+     * @param User $submittedFrom
+     */
+    public function setSubmittedFrom(User $submittedFrom)
+    {
+        $this->submittedFrom = $submittedFrom;
     }
 }

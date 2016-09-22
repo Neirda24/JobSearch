@@ -60,6 +60,7 @@ class MenuBuilder
         if ($this->authorizationChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             $menu->addChild('layout.logout', ['route' => 'fos_user_security_logout'])->setExtra('translation_domain', 'FOSUserBundle');
         } else {
+            $menu->addChild('layout.register', ['route' => 'fos_user_registration_register'])->setExtra('translation_domain', 'FOSUserBundle');
             $menu->addChild('layout.login', ['route' => 'fos_user_security_login'])->setExtra('translation_domain', 'FOSUserBundle');
         }
         
