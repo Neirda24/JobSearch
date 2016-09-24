@@ -1,0 +1,34 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block content %}
+    <table>
+        <thead>
+            <tr>
+                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') and (is_granted('ROLE_ADMIN') or is_granted('EDIT', company)) %}
+                    <th>Action</th>
+                {% endif %}
+                <th>Name</th>
+                <th>Address</th>
+                <th>SIRET</th>
+                <th>Employees</th>
+                <th>Created by</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') and (is_granted('ROLE_ADMIN') or is_granted('EDIT', company)) %}
+                    <td>
+                        <ul>
+                            <li><a href="{{ path('company_edit', {'id': company.id}) }}">Edit</a></li>
+                        </ul>
+                    </td>
+                {% endif %}
+                <td>{{ company.name }}</td>
+                <td>{{ company.address }}</td>
+                <td>{{ company.siret }}</td>
+                <td>{{ company.collaborators|join(', ') }}</td>
+                <td>{{ company.submittedFrom.username }}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock content %}

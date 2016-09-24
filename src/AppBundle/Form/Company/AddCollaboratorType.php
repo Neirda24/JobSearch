@@ -3,17 +3,17 @@
 namespace AppBundle\Form;
 
 use AppBundle\Entity\Company;
-use AppBundle\Form\Common\AddressType;
+use AppBundle\Entity\User;
 use AppBundle\Form\Common\SiretType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-class CompanyType extends AbstractType
+class AddCollaboratorType extends AbstractType
 {
     /**
      * @var AuthorizationCheckerInterface
@@ -36,19 +36,17 @@ class CompanyType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TextType::class, [
-                'required' => true,
-            ])
-            ->add('address', AddressType::class, [
+            ->add('collaborators', EntityType::class, [
                 'required' => false,
+                'class'    => User::class,
             ]);
         
-        $authorizationChecker = $this->authorizationChecker;
+        $authorizationChecker = $this->authorizationChecker->isGranted(User::ROLE_ADMIN);
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($authorizationChecker) {
             $company = $event->getData();
             $form    = $event->getForm();
             
-            if (!$company || null === $company->getId() || $authorizationChecker->isGranted('ROLE_ADMIN') || $authorizationChecker->isGranted('OWNER', $company)) {
+            if (!$company || null === $company->getId() || $authorizationChecker->isGranted(User::ROLE_ADMIN)) {
                 $form
                     ->add('siret', SiretType::class, [
                         'required' => true,

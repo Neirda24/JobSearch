@@ -4,10 +4,12 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Company;
 use AppBundle\Form\CompanyType;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
+use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
+use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
 class CompanyController extends AbstractController
 {
@@ -42,14 +44,22 @@ class CompanyController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($company);
-            try {
-                $em->flush();
-                
-                $this->addFlash('success', 'Successfuly Inserted');
-            } catch (UniqueConstraintViolationException $ucve) {
-                $error = $this->createFormError('error.company.already_exists');
-                $form->addError($error);
-            }
+            $em->flush($company);
+            
+            // creating the ACL
+            $aclProvider    = $this->get('security.acl.provider');
+            $objectIdentity = ObjectIdentity::fromDomainObject($company);
+            $acl            = $aclProvider->createAcl($objectIdentity);
+            
+            // retrieving the security identity of the currently logged-in user
+            $user             = $this->getUser();
+            $securityIdentity = UserSecurityIdentity::fromAccount($user);
+            
+            // grant operator access
+            $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OPERATOR);
+            $aclProvider->updateAcl($acl);
+            
+            return $this->redirectToRoute('company_view', ['id' => $company->getId()]);
         }
         
         return $this->render('AppBundle:Company:create.html.twig', [
@@ -59,6 +69,7 @@ class CompanyController extends AbstractController
     
     /**
      * @Route("/company/edit/{id}", name="company_edit", methods={"GET", "PUT"})
+     * @Security("is_granted('EDIT', company) or has_role('ROLE_ADMIN')")
      */
     public function editAction(Request $request, Company $company)
     {
@@ -71,14 +82,23 @@ class CompanyController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($company);
-            $em->flush();
-            
-            $this->addFlash('success', 'Successfuly updated');
+            $em->flush($company);
+    
+            return $this->redirectToRoute('company_view', ['id' => $company->getId()]);
         }
         
         return $this->render('AppBundle:Company:edit.html.twig', [
             'form' => $form->createView(),
-            'edit' => true,
+        ]);
+    }
+    
+    /**
+     * @Route("/company/view/{id}", name="company_view", methods={"GET"})
+     */
+    public function viewAction(Company $company)
+    {
+        return $this->render('AppBundle:Company:view.html.twig', [
+            'company' => $company,
         ]);
     }
 }

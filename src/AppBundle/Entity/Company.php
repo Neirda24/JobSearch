@@ -4,10 +4,12 @@ namespace AppBundle\Entity;
 
 use AppBundle\Entity\Common\Address;
 use AppBundle\Entity\Common\Siret;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\UniqueConstraint;
 use SLLH\IsoCodesValidator\Constraints as IsoCodesAssert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -17,63 +19,81 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          @UniqueConstraint(
  *              name="UNIQUE_COMPANY_SIRET",
  *              columns={
- *                  "siret_siren","siret_nic"
+ *                  "siret_siren", "siret_nic"
  *              }
  *          )
  *     }
  * )
  * @ORM\Entity(repositoryClass="AppBundle\Repository\CompanyRepository")
+ * @UniqueEntity(fields={"siret.siren", "siret.nic"})
+ * @ORM\HasLifecycleCallbacks()
  */
 class Company
 {
     /**
+     * @var string
+     *
      * @ORM\Id
      * @ORM\Column(type="guid")
      * @ORM\GeneratedValue(strategy="UUID")
-     *
-     * @var string
      */
     private $id;
     
     /**
-     * @ORM\Column(type="string", length=255)
-     *
      * @var string
+     *
+     * @ORM\Column(type="string", length=255)
      */
     private $name;
     
     /**
+     * @var Address
+     *
      * @ORM\Embedded(class="AppBundle\Entity\Common\Address")
      * @Assert\Valid(traverse=true)
-     *
-     * @var Address
      */
     private $address;
     
     /**
+     * @var Siret
+     *
      * @ORM\Embedded(class="AppBundle\Entity\Common\Siret")
      * @Assert\Valid(traverse=true)
-     *
-     * @var Siret
      */
     private $siret;
     
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\User", mappedBy="company")
-     * @Assert\Valid(traverse=true)
+     * @var Collaborator[]
      *
-     * @var User[]
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Collaborator", mappedBy="company")
+     * @Assert\Valid(traverse=true)
      */
     private $collaborators;
     
     /**
+     * @var User
+     *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="submittedCompanies")
      * @ORM\JoinColumn(nullable=false)
      * @Assert\Valid(traverse=true)
-     *
-     * @var User
      */
     private $submittedFrom;
+    
+    /**
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="companiesOwned")
+     * @ORM\JoinColumn(nullable=false)
+     * @Assert\Valid(traverse=true)
+     */
+    private $owner;
+    
+    /**
+     * @var DateTime
+     *
+     * @ORM\Column(type="datetime", nullable=false)
+     */
+    private $createdAt;
     
     /**
      * Company constructor.
@@ -81,6 +101,7 @@ class Company
     public function __construct()
     {
         $this->collaborators = new ArrayCollection();
+        $this->siret = new Siret();
     }
     
     /**
@@ -140,7 +161,7 @@ class Company
     }
     
     /**
-     * @return User[]
+     * @return Collaborator[]
      */
     public function getCollaborators()
     {
@@ -148,19 +169,27 @@ class Company
     }
     
     /**
-     * @param User $collaborator
+     * @param Collaborator[] $collaborators
+     */
+    public function setCollaborators(array $collaborators)
+    {
+        $this->collaborators = $collaborators;
+    }
+    
+    /**
+     * @param Collaborator $collaborator
      *
      * @return bool
      */
-    public function hasCollaborator(User $collaborator)
+    public function hasCollaborator(Collaborator $collaborator)
     {
         return $this->collaborators->contains($collaborator);
     }
     
     /**
-     * @param User $collaborator
+     * @param Collaborator $collaborator
      */
-    public function addCollaborator(User $collaborator)
+    public function addCollaborator(Collaborator $collaborator)
     {
         if (!$this->hasCollaborator($collaborator)) {
             $this->collaborators->add($collaborator);
@@ -168,9 +197,9 @@ class Company
     }
     
     /**
-     * @param User $collaborator
+     * @param Collaborator $collaborator
      */
-    public function removeCollaborator(User $collaborator)
+    public function removeCollaborator(Collaborator $collaborator)
     {
         if ($this->hasCollaborator($collaborator)) {
             $this->collaborators->removeElement($collaborator);
@@ -191,5 +220,59 @@ class Company
     public function setSubmittedFrom(User $submittedFrom)
     {
         $this->submittedFrom = $submittedFrom;
+    }
+    
+    /**
+     * @return DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+    
+    /**
+     * @param DateTime $createdAt
+     */
+    public function setCreatedAt(DateTime $createdAt)
+    {
+        $this->createdAt = $createdAt;
+    }
+    
+    /**
+     * @return User
+     */
+    public function getOwner()
+    {
+        return $this->owner;
+    }
+    
+    /**
+     * @param User $owner
+     */
+    public function setOwner(User $owner)
+    {
+        $this->owner = $owner;
+    }
+    
+    /**
+     * @param User|null $user
+     *
+     * @return bool|null
+     */
+    public function isOwner(User $user = null)
+    {
+        if (null !== $user && null !== $this->owner) {
+            return ($this->owner->getId() === $user->getId());
+        }
+        
+        return null;
+    }
+    
+    /**
+     * @ORM\PrePersist()
+     */
+    public function prePersist()
+    {
+        $this->setCreatedAt(new DateTime('now'));
     }
 }

@@ -9,5 +9,5 @@
             {% endfor %}
         </div>
     {% endif %}
-    {% include 'AppBundle:Company/Form:create_edit.html.twig' %}
+    {% include 'AppBundle:Company/Form:create_edit.html.twig' with {'edit': true} %}
 {% endblock content %}

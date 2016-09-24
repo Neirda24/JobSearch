@@ -4,7 +4,7 @@
     <table>
         <thead>
         <tr>
-            <th>ID</th>
+            <th>Action</th>
             <th>Name</th>
             <th>Address</th>
             <th>SIRET</th>
@@ -14,7 +14,14 @@
         <tbody>
         {% for company in companies %}
             <tr>
-                <td><a href="{{ path('company_edit', {'id': company.id}) }}">{{ company.id }}</a></td>
+                <td>
+                    <ul>
+                        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') and (is_granted('ROLE_ADMIN') or is_granted('EDIT', company)) %}
+                            <li><a href="{{ path('company_edit', {'id': company.id}) }}">Edit</a></li>
+                        {% endif %}
+                        <li><a href="{{ path('company_view', {'id': company.id}) }}">View</a></li>
+                    </ul>
+                </td>
                 <td>{{ company.name }}</td>
                 <td>{{ company.address }}</td>
                 <td>{{ company.siret }}</td>

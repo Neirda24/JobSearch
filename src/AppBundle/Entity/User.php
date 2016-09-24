@@ -14,6 +14,13 @@ use FOS\UserBundle\Model\User as BaseUser;
 class User extends BaseUser
 {
     /**
+     * @var string
+     */
+    const ROLE_ADMIN = 'ROLE_ADMIN';
+    
+    /**
+     * @var string
+     *
      * @ORM\Id
      * @ORM\Column(type="guid")
      * @ORM\GeneratedValue(strategy="UUID")
@@ -28,12 +35,20 @@ class User extends BaseUser
     private $validatedAt;
     
     /**
-     * @var Company
+     * @var Collaborator[]
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Company", inversedBy="collaborators")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Collaborator", mappedBy="user")
      * @ORM\JoinColumn(nullable=true)
      */
-    private $company;
+    private $collaborators;
+    
+    /**
+     * @var Collaborator[]
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Collaborator", mappedBy="addedBy")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $collaboratorsAdded;
     
     /**
      * @var Company[]
@@ -44,12 +59,22 @@ class User extends BaseUser
     private $submittedCompanies;
     
     /**
+     * @var Company[]
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Company", mappedBy="owner")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $companiesOwned;
+    
+    /**
      * User constructor.
      */
     public function __construct()
     {
         parent::__construct();
+        $this->collaborators      = new ArrayCollection();
         $this->submittedCompanies = new ArrayCollection();
+        $this->companiesOwned     = new ArrayCollection();
     }
     
     /**
@@ -71,28 +96,33 @@ class User extends BaseUser
     /**
      * @return bool
      */
-    public function hasCompany()
+    public function hasCollaborator()
     {
-        return ($this->company instanceof Company);
+        return !$this->collaborators->isEmpty();
     }
     
     /**
-     * @return Company
+     * @return Collaborator[]
      */
-    public function getCompany()
+    public function getCollaborators()
     {
-        return $this->company;
+        return $this->collaborators;
     }
     
     /**
-     * @param Company $company
+     * @param Collaborator[] $collaborators
      */
-    public function setCompany(Company $company = null)
+    public function setCollaborators(array $collaborators)
     {
-        if (null === $company && $this->company instanceof Company) {
-            $company->removeCollaborator($this);
-        }
-        $this->company = $company;
+        array_walk($collaborators, [$this, 'addCollaborator']);
+    }
+    
+    /**
+     * @param Collaborator $collaborator
+     */
+    public function addCollaborator(Collaborator $collaborator)
+    {
+        $this->collaborators->add($collaborator);
     }
     
     /**
@@ -129,5 +159,37 @@ class User extends BaseUser
         if (!$this->hasSubmittedCompany($submittedCompany)) {
             $this->submittedCompanies->add($submittedCompany);
         }
+    }
+    
+    /**
+     * @return Collaborator[]
+     */
+    public function getCollaboratorsAdded()
+    {
+        return $this->collaboratorsAdded;
+    }
+    
+    /**
+     * @param Collaborator[] $collaboratorsAdded
+     */
+    public function setCollaboratorsAdded(array $collaboratorsAdded)
+    {
+        $this->collaboratorsAdded = $collaboratorsAdded;
+    }
+    
+    /**
+     * @return Company[]
+     */
+    public function getCompaniesOwned()
+    {
+        return $this->companiesOwned;
+    }
+    
+    /**
+     * @param Company[] $companiesOwned
+     */
+    public function setCompaniesOwned(array $companiesOwned)
+    {
+        $this->companiesOwned = $companiesOwned;
     }
 }
