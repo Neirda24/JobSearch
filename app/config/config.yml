@@ -7,6 +7,8 @@ imports:
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: fr
+    mailer_auth_mode:  login
+    mailer_port:       587
 
 framework:
     #esi:             ~
@@ -71,6 +73,8 @@ swiftmailer:
     host:      "%mailer_host%"
     username:  "%mailer_user%"
     password:  "%mailer_password%"
+    auth_mode: "%mailer_auth_mode%"
+    port:      "%mailer_port%"
     spool:     { type: memory }
 
 fos_user:
@@ -78,7 +82,7 @@ fos_user:
     firewall_name: main
     user_class: AppBundle\Entity\User
     from_email:
-        address:        no-reply@jobsearch.robischae.fr
+        address:        no-reply@robischae.fr
         sender_name:    JobSearch
     registration:
         confirmation:

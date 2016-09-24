@@ -43,6 +43,7 @@ class AddCollaboratorType extends AbstractType
         
         $authorizationChecker = $this->authorizationChecker->isGranted(User::ROLE_ADMIN);
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($authorizationChecker) {
+            /** @var AuthorizationCheckerInterface $authorizationChecker */
             $company = $event->getData();
             $form    = $event->getForm();
             
