@@ -1,7 +1,9 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\Company;
 
+use AppBundle\Entity\Company;
+use AppBundle\Entity\User;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -22,27 +24,12 @@ class Collaborator
     private $id;
     
     /**
-     * @var User
-     *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="collaborators")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $user;
-    
-    /**
      * @var Company
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Company", inversedBy="collaborators")
      * @ORM\JoinColumn(nullable=false)
      */
     private $company;
-    
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $verifiedAt;
     
     /**
      * @var DateTime
@@ -60,27 +47,18 @@ class Collaborator
     private $addedBy;
     
     /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=255)
+     */
+    private $firstname;
+    
+    /**
      * @return integer
      */
     public function getId()
     {
         return $this->id;
-    }
-    
-    /**
-     * @return User
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-    
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user)
-    {
-        $this->user = $user;
     }
     
     /**
@@ -97,22 +75,6 @@ class Collaborator
     public function setCompany(Company $company)
     {
         $this->company = $company;
-    }
-    
-    /**
-     * @return DateTime
-     */
-    public function getVerifiedAt()
-    {
-        return $this->verifiedAt;
-    }
-    
-    /**
-     * @param DateTime $verifiedAt
-     */
-    public function setVerifiedAt(DateTime $verifiedAt)
-    {
-        $this->verifiedAt = $verifiedAt;
     }
     
     /**
@@ -145,6 +107,22 @@ class Collaborator
     public function setCreatedAt(DateTime $createdAt)
     {
         $this->createdAt = $createdAt;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getFirstname()
+    {
+        return $this->firstname;
+    }
+    
+    /**
+     * @param string $firstname
+     */
+    public function setFirstname(string $firstname)
+    {
+        $this->firstname = trim($firstname);
     }
     
     /**

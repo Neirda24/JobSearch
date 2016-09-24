@@ -5,3 +5,10 @@ services:
             - "@security.authorization_checker"
         tags:
             - { name: form.type }
+
+    app.form.company.collaborator:
+        class: AppBundle\Form\Company\CollaboratorType
+        arguments:
+            - "@security.token_storage"
+        tags:
+            - { name: form.type }

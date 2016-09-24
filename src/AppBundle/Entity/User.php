@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Company\Collaborator;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -33,14 +34,6 @@ class User extends BaseUser
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $validatedAt;
-    
-    /**
-     * @var Collaborator[]
-     *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Collaborator", mappedBy="user")
-     * @ORM\JoinColumn(nullable=true)
-     */
-    private $collaborators;
     
     /**
      * @var Collaborator[]

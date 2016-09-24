@@ -56,7 +56,14 @@ class CompanyController extends AbstractController
             $securityIdentity = UserSecurityIdentity::fromAccount($user);
             
             // grant operator access
-            $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OPERATOR);
+            $maskBuilder = new MaskBuilder();
+            $maskBuilder
+                ->add(MaskBuilder::MASK_OPERATOR)
+                ->remove(MaskBuilder::MASK_DELETE)
+            ;
+            
+            $mask = $maskBuilder->get();
+            $acl->insertObjectAce($securityIdentity, $mask);
             $aclProvider->updateAcl($acl);
             
             return $this->redirectToRoute('company_view', ['id' => $company->getId()]);
