@@ -3,8 +3,11 @@
 namespace AppBundle\Entity\Company;
 
 use AppBundle\Entity\Company;
+use AppBundle\Entity\Search;
+use AppBundle\Entity\Search\Details;
 use AppBundle\Entity\User;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -47,11 +50,26 @@ class Collaborator
     private $addedBy;
     
     /**
+     * @var Search[]
+     *
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Search\Details", inversedBy="collaborators")
+     */
+    private $inSearches;
+    
+    /**
      * @var string
      *
      * @ORM\Column(type="string", length=255)
      */
     private $firstname;
+    
+    /**
+     * Collaborator constructor.
+     */
+    public function __construct()
+    {
+        $this->inSearches = new ArrayCollection();
+    }
     
     /**
      * @return integer
@@ -110,6 +128,33 @@ class Collaborator
     }
     
     /**
+     * @return Search[]
+     */
+    public function getInSearches()
+    {
+        return $this->inSearches;
+    }
+    
+    /**
+     * @param Search[] $inSearches
+     */
+    public function setInSearches(array $inSearches)
+    {
+        $this->inSearches = $inSearches;
+    }
+    
+    /**
+     * @param Details $searchDetails
+     */
+    public function addInSearch(Details $searchDetails)
+    {
+        if (!$this->inSearches->contains($searchDetails)) {
+            $this->inSearches->add($searchDetails);
+            $searchDetails->addCollaborator($this);
+        }
+    }
+    
+    /**
      * @return string
      */
     public function getFirstname()
@@ -131,5 +176,13 @@ class Collaborator
     public function prePersist()
     {
         $this->setCreatedAt(new DateTime('now'));
+    }
+    
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getFirstname();
     }
 }

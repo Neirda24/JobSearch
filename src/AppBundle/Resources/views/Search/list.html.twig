@@ -1,0 +1,29 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block content %}
+    <table>
+        <thead>
+        <tr>
+            <th>Action</th>
+            <th>Name</th>
+            <th>Date start</th>
+            <th>Date end</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for search in searches %}
+            <tr>
+                <td>
+                    <ul>
+                        <li><a href="{{ path('search_edit', {'id': search.id}) }}">Edit</a></li>
+                        <li><a href="{{ path('search_view', {'id': search.id}) }}">View</a></li>
+                    </ul>
+                </td>
+                <td>{{ search.name }}</td>
+                <td>{{ search.dateStart|date('Y M d') }}</td>
+                <td>{{ search.dateEnd|date('Y M d') }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock content %}

@@ -1,0 +1,13 @@
+{% extends 'AppBundle::base.html.twig' %}
+{% trans_default_domain 'form' %}
+
+{% block content %}
+    {% if app.session.flashBag.has('success') %}
+        <div class="alert alert-success">
+            {% for msg in app.session.flashBag.get('success') %}
+                {{ msg }}
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% include 'AppBundle:Search/Form:create_edit.html.twig' %}
+{% endblock content %}

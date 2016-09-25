@@ -1,0 +1,13 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block content %}
+    {% for search in app.user.searches %}
+        <div>
+            <div>
+                <span><a href="{{ path('dashboard_search', {'id': search.id}) }}">{{ search.name }}</a></span>
+                <span>{{ search.dateStart|date('Y M d') }}</span>
+                <span>{{ search.dateEnd|date('Y M d') }}</span>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock content %}

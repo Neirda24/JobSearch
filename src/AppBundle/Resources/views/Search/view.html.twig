@@ -1,0 +1,26 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block content %}
+    <table>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Name</th>
+                <th>Date start</th>
+                <th>Date end</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <ul>
+                        <li><a href="{{ path('search_edit', {'id': search.id}) }}">Edit</a></li>
+                    </ul>
+                </td>
+                <td>{{ search.name }}</td>
+                <td>{{ search.dateStart|date('Y M d') }}</td>
+                <td>{% if search.dateEnd is not null %}{{ search.dateEnd|date('Y M d') }}{% else %}En cours{% endif %}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock content %}

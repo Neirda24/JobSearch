@@ -38,7 +38,7 @@ class User extends BaseUser
     /**
      * @var Collaborator[]
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Collaborator", mappedBy="addedBy")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Company\Collaborator", mappedBy="addedBy")
      * @ORM\JoinColumn(nullable=true)
      */
     private $collaboratorsAdded;
@@ -60,14 +60,21 @@ class User extends BaseUser
     private $companiesOwned;
     
     /**
+     * @var Search[]
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Search", mappedBy="owner")
+     */
+    private $searches;
+    
+    /**
      * User constructor.
      */
     public function __construct()
     {
         parent::__construct();
-        $this->collaborators      = new ArrayCollection();
         $this->submittedCompanies = new ArrayCollection();
         $this->companiesOwned     = new ArrayCollection();
+        $this->searches           = new ArrayCollection();
     }
     
     /**
@@ -84,38 +91,6 @@ class User extends BaseUser
     public function setValidatedAt(DateTime $validatedAt)
     {
         $this->validatedAt = $validatedAt;
-    }
-    
-    /**
-     * @return bool
-     */
-    public function hasCollaborator()
-    {
-        return !$this->collaborators->isEmpty();
-    }
-    
-    /**
-     * @return Collaborator[]
-     */
-    public function getCollaborators()
-    {
-        return $this->collaborators;
-    }
-    
-    /**
-     * @param Collaborator[] $collaborators
-     */
-    public function setCollaborators(array $collaborators)
-    {
-        array_walk($collaborators, [$this, 'addCollaborator']);
-    }
-    
-    /**
-     * @param Collaborator $collaborator
-     */
-    public function addCollaborator(Collaborator $collaborator)
-    {
-        $this->collaborators->add($collaborator);
     }
     
     /**
@@ -184,5 +159,21 @@ class User extends BaseUser
     public function setCompaniesOwned(array $companiesOwned)
     {
         $this->companiesOwned = $companiesOwned;
+    }
+    
+    /**
+     * @return Search[]
+     */
+    public function getSearches()
+    {
+        return $this->searches;
+    }
+    
+    /**
+     * @param Search[] $searches
+     */
+    public function setSearches(array $searches)
+    {
+        $this->searches = $searches;
     }
 }

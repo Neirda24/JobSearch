@@ -3,7 +3,7 @@
 {% block header %}
     <nav>
         {{ knp_menu_render('main') }}
-        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
             {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }} |
         {% endif %}
         {{ knp_menu_render('login') }}

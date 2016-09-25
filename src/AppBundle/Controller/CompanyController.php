@@ -30,7 +30,7 @@ class CompanyController extends AbstractController
     
     /**
      * @Route("/company/create", name="company_create", methods={"GET", "POST"})
-     * @Security("is_granted('ROLE_USER')")
+     * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
      */
     public function createAction(Request $request)
     {

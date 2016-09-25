@@ -37,7 +37,7 @@ class MenuBuilder
     {
         $menu = $this->factory->createItem('root');
         $menu->setExtra('translation_domain', 'menu');
-        
+    
         // COMPANIES
         $companies = $menu->addChild('company.title', [
             'dropdown' => true,
@@ -45,6 +45,14 @@ class MenuBuilder
         ])->setExtra('translation_domain', 'menu');
         $companies->addChild('company.list', ['route' => 'company_list'])->setExtra('translation_domain', 'menu');
         $companies->addChild('company.create', ['route' => 'company_create'])->setExtra('translation_domain', 'menu');
+    
+        // SEARCH
+        $companies = $menu->addChild('search.title', [
+            'dropdown' => true,
+            'caret'    => true,
+        ])->setExtra('translation_domain', 'menu');
+        $companies->addChild('search.list', ['route' => 'search_list'])->setExtra('translation_domain', 'menu');
+        $companies->addChild('search.create', ['route' => 'search_create'])->setExtra('translation_domain', 'menu');
         
         return $menu;
     }
@@ -58,6 +66,7 @@ class MenuBuilder
         $menu->setExtra('translation_domain', 'menu');
         
         if ($this->authorizationChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            $menu->addChild('dashboard.title', ['route' => 'dashboard'])->setExtra('translation_domain', 'menu');
             $menu->addChild('layout.logout', ['route' => 'fos_user_security_logout'])->setExtra('translation_domain', 'FOSUserBundle');
         } else {
             $menu->addChild('layout.register', ['route' => 'fos_user_registration_register'])->setExtra('translation_domain', 'FOSUserBundle');

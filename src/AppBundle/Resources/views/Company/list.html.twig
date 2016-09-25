@@ -16,7 +16,7 @@
             <tr>
                 <td>
                     <ul>
-                        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') and (is_granted('ROLE_ADMIN') or is_granted('EDIT', company)) %}
+                        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') and (is_granted('ROLE_ADMIN') or is_granted('EDIT', company) or company.isOwner(app.user)) %}
                             <li><a href="{{ path('company_edit', {'id': company.id}) }}">Edit</a></li>
                         {% endif %}
                         <li><a href="{{ path('company_view', {'id': company.id}) }}">View</a></li>

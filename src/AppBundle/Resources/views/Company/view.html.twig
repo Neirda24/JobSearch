@@ -4,7 +4,7 @@
     <table>
         <thead>
             <tr>
-                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') and (is_granted('ROLE_ADMIN') or is_granted('EDIT', company)) %}
+                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') and (is_granted('ROLE_ADMIN') or is_granted('EDIT', company) or company.isOwner(app.user)) %}
                     <th>Action</th>
                 {% endif %}
                 <th>Name</th>
@@ -16,7 +16,7 @@
         </thead>
         <tbody>
             <tr>
-                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') and (is_granted('ROLE_ADMIN') or is_granted('EDIT', company)) %}
+                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') and (is_granted('ROLE_ADMIN') or is_granted('EDIT', company) or company.isOwner(app.user)) %}
                     <td>
                         <ul>
                             <li><a href="{{ path('company_edit', {'id': company.id}) }}">Edit</a></li>

@@ -5,6 +5,7 @@ namespace AppBundle\Entity;
 use AppBundle\Entity\Common\Address;
 use AppBundle\Entity\Common\Siret;
 use AppBundle\Entity\Company\Collaborator;
+use AppBundle\Entity\Search\Details;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -66,7 +67,7 @@ class Company
     /**
      * @var Collaborator[]
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Collaborator", mappedBy="company")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Company\Collaborator", mappedBy="company")
      * @Assert\Valid(traverse=true)
      */
     private $collaborators;
