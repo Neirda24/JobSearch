@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="collaborator")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\CollaboratorRepository")
  * @ORM\HasLifecycleCallbacks()
  */
 class Collaborator
@@ -27,14 +27,6 @@ class Collaborator
     private $id;
     
     /**
-     * @var Company
-     *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Company", inversedBy="collaborators")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $company;
-    
-    /**
      * @var DateTime
      *
      * @ORM\Column(type="datetime", nullable=false)
@@ -42,19 +34,11 @@ class Collaborator
     private $createdAt;
     
     /**
-     * @var User
-     *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="collaboratorsAdded")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $addedBy;
-    
-    /**
      * @var Search[]
      *
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Search\Details", inversedBy="collaborators")
      */
-    private $inSearches;
+    private $searchDetails;
     
     /**
      * @var string
@@ -68,7 +52,7 @@ class Collaborator
      */
     public function __construct()
     {
-        $this->inSearches = new ArrayCollection();
+        $this->searchDetails = new ArrayCollection();
     }
     
     /**
@@ -77,38 +61,6 @@ class Collaborator
     public function getId()
     {
         return $this->id;
-    }
-    
-    /**
-     * @return Company
-     */
-    public function getCompany()
-    {
-        return $this->company;
-    }
-    
-    /**
-     * @param Company $company
-     */
-    public function setCompany(Company $company)
-    {
-        $this->company = $company;
-    }
-    
-    /**
-     * @return User
-     */
-    public function getAddedBy()
-    {
-        return $this->addedBy;
-    }
-    
-    /**
-     * @param User $addedBy
-     */
-    public function setAddedBy(User $addedBy)
-    {
-        $this->addedBy = $addedBy;
     }
     
     /**
@@ -130,26 +82,26 @@ class Collaborator
     /**
      * @return Search[]
      */
-    public function getInSearches()
+    public function getSearchDetails()
     {
-        return $this->inSearches;
+        return $this->searchDetails;
     }
     
     /**
-     * @param Search[] $inSearches
+     * @param Search[] $searchDetails
      */
-    public function setInSearches(array $inSearches)
+    public function setSearchDetails(array $searchDetails)
     {
-        $this->inSearches = $inSearches;
+        $this->searchDetails = $searchDetails;
     }
     
     /**
      * @param Details $searchDetails
      */
-    public function addInSearch(Details $searchDetails)
+    public function addSearchDetails(Details $searchDetails)
     {
-        if (!$this->inSearches->contains($searchDetails)) {
-            $this->inSearches->add($searchDetails);
+        if (!$this->searchDetails->contains($searchDetails)) {
+            $this->searchDetails->add($searchDetails);
             $searchDetails->addCollaborator($this);
         }
     }

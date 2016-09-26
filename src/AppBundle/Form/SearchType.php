@@ -53,6 +53,6 @@ class SearchType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'form_company';
+        return 'form_search';
     }
 }

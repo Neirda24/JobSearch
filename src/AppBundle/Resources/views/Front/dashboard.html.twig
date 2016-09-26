@@ -1,13 +1,27 @@
 {% extends 'AppBundle::base.html.twig' %}
 
 {% block content %}
-    {% for search in app.user.searches %}
-        <div>
+    <div>
+        <h1>En cours</h1>
+        {% for search in app.user.searches if search.dateEnd is not null %}
             <div>
-                <span><a href="{{ path('dashboard_search', {'id': search.id}) }}">{{ search.name }}</a></span>
-                <span>{{ search.dateStart|date('Y M d') }}</span>
-                <span>{{ search.dateEnd|date('Y M d') }}</span>
+                <div>
+                    <span><a href="{{ path('search_view', {'id': search.id}) }}">{{ search.name }}</a></span>
+                    <span>{{ search.dateStart|date('Y M d') }}</span>
+                </div>
             </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
+    <div>
+        <h1>Finished</h1>
+        {% for search in app.user.searches if search.dateEnd is null %}
+            <div>
+                <div>
+                    <span><a href="{{ path('search_view', {'id': search.id}) }}">{{ search.name }}</a></span>
+                    <span>{{ search.dateStart|date('Y M d') }}</span>
+                    <span>{{ search.dateEnd|date('Y M d') }}</span>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock content %}

@@ -1,0 +1,30 @@
+{% trans_default_domain 'form' %}
+
+{% if edit is defined and edit is same as(true) %}
+    {% set button_trans_key = 'form.submit.update' %}
+{% else %}
+    {% set button_trans_key = 'form.submit.create' %}
+{% endif %}
+
+{{ form_errors(form) }}
+{{ form_start(form, {
+    'attr': {
+        'id': form.vars.id
+    }
+}) }}
+<h2>{{ 'form.search.details.title'|trans }}</h2>
+<div>
+    {{ form_errors(form.collaborators) }}
+    {{ form_label(form.collaborators) }}
+    {{ form_widget(form.collaborators) }}
+</div>
+<div>
+    {{ form_errors(form.description) }}
+    {{ form_label(form.description) }}
+    {{ form_widget(form.description) }}
+</div>
+
+{{ form_widget(form._token) }}
+
+<input type="submit" value="{{ button_trans_key|trans }}"/>
+{{ form_end(form) }}

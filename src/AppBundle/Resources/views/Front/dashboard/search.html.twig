@@ -4,10 +4,16 @@
     <div>
         <h1>{{ search.name }}</h1>
     </div>
-    {{ dump(companies) }}
-    {#{% for company in companies %}#}
-        {#<div>#}
-            {#<h1>{{ detail. }}</h1>#}
-        {#</div>#}
-    {#{% endfor %}#}
+    {% for company in companies %}
+        <div id="{{ company.company.id }}">
+            <h1>{{ company.company.name }}</h1>
+            <div class="address">
+                Adresse: {{ company.company.address }}
+            </div>
+            <ul>
+                <li><a href="#">Details ({{ company.count_search_details }})</a></li>
+                <li><a href="{{ path('search_details_create', {'id': search.id, 'company_id': company.company.id}) }}">Add</a></li>
+            </ul>
+        </div>
+    {% endfor %}
 {% endblock content %}

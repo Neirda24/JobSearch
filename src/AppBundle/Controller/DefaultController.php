@@ -26,21 +26,4 @@ class DefaultController extends Controller
     {
         return $this->render('AppBundle:Front:dashboard.html.twig');
     }
-    
-    /**
-     * @Route("/dashboard/search/{id}", name="dashboard_search")
-     * @Security("search.isOwner(user)")
-     */
-    public function dashboardSearchAction(Request $request, Search $search)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $companyRepository = $em->getRepository('AppBundle:Company');
-        
-        $companies = $companyRepository->fetchAllFromSearch($search);
-        
-        return $this->render('AppBundle:Front:dashboard/search.html.twig', [
-            'search' => $search,
-            'companies' => $companies,
-        ]);
-    }
 }

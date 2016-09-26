@@ -15,42 +15,19 @@ use Doctrine\ORM\EntityRepository;
  */
 class CompanyRepository extends EntityRepository
 {
-    /**
-     * @param Search $search
-     *
-     * @return Company[]
-     */
-    public function fetchAllFromSearch(Search $search)
+    public function fetchGroupedForDashboard(Search $search)
     {
         $qb = $this->createQueryBuilder('c');
         
         $qb
-            ->join('c.collaborators', 'co')
-            ->join('co.inSearches', 'sd')
-            ->join('sd.search', 's')
-            ->where($qb->expr()->eq('s', ':search'))
+            ->select('c as company')
+            ->addSelect('COUNT(c.id) as count_search_details')
+            ->leftJoin('c.searchDetails', 'sd')
+            ->leftJoin('sd.search', 's')
+            ->andWhere($qb->expr()->eq('s', ':search'))
             ->setParameter('search', $search)
-        ;
-        
-        return $qb->getQuery()->getResult();
-    }
-    
-    /**
-     * @param User $user
-     *
-     * @return Company[]
-     */
-    public function fetchAllFromUser(User $user)
-    {
-        $qb = $this->createQueryBuilder('c');
-        
-        $qb
-            ->join('c.collaborators', 'co')
-            ->join('co.inSearches', 'sd')
-            ->join('sd.search', 's')
-            ->join('s.owner', 'o')
-            ->where($qb->expr()->eq('o', ':owner'))
-            ->setParameter('owner', $user)
+            ->groupBy('c.id')
+            ->orderBy('sd.createdAt')
         ;
         
         return $qb->getQuery()->getResult();

@@ -65,12 +65,12 @@ class Company
     private $siret;
     
     /**
-     * @var Collaborator[]
+     * @var Details[]
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Company\Collaborator", mappedBy="company")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Search\Details", mappedBy="company")
      * @Assert\Valid(traverse=true)
      */
-    private $collaborators;
+    private $searchDetails;
     
     /**
      * @var User
@@ -102,8 +102,9 @@ class Company
      */
     public function __construct()
     {
-        $this->collaborators = new ArrayCollection();
+        $this->searchDetails = new ArrayCollection();
         $this->siret         = new Siret();
+        $this->address         = new Address();
     }
     
     /**
@@ -163,48 +164,39 @@ class Company
     }
     
     /**
-     * @return Collaborator[]
+     * @return Details[]
      */
-    public function getCollaborators()
+    public function getSearchDetails()
     {
-        return $this->collaborators;
+        return $this->searchDetails;
     }
     
     /**
-     * @param Collaborator[] $collaborators
+     * @param Details[] $searchDetails
      */
-    public function setCollaborators(array $collaborators)
+    public function setSearchDetails(array $searchDetails)
     {
-        $this->collaborators = $collaborators;
+        array_walk($searchDetails, [$this, 'addSearchDetails']);
     }
     
     /**
-     * @param Collaborator $collaborator
+     * @param Details $searchDetails
      *
      * @return bool
      */
-    public function hasCollaborator(Collaborator $collaborator)
+    public function hasSearchDetails(Details $searchDetails)
     {
-        return $this->collaborators->contains($collaborator);
+        return $this->searchDetails->contains($searchDetails);
     }
     
     /**
-     * @param Collaborator $collaborator
+     * @param Details $searchDetails
      */
-    public function addCollaborator(Collaborator $collaborator)
+    public function addSearchDetails(Details $searchDetails)
     {
-        if (!$this->hasCollaborator($collaborator)) {
-            $this->collaborators->add($collaborator);
-        }
-    }
-    
-    /**
-     * @param Collaborator $collaborator
-     */
-    public function removeCollaborator(Collaborator $collaborator)
-    {
-        if ($this->hasCollaborator($collaborator)) {
-            $this->collaborators->removeElement($collaborator);
+        if (!$this->hasSearchDetails($searchDetails)) {
+            $this->searchDetails->add($searchDetails);
+            $searchDetails->setCompany($this);
         }
     }
     

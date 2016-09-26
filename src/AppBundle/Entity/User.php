@@ -36,14 +36,6 @@ class User extends BaseUser
     private $validatedAt;
     
     /**
-     * @var Collaborator[]
-     *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Company\Collaborator", mappedBy="addedBy")
-     * @ORM\JoinColumn(nullable=true)
-     */
-    private $collaboratorsAdded;
-    
-    /**
      * @var Company[]
      *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Company", mappedBy="submittedFrom")
@@ -127,22 +119,6 @@ class User extends BaseUser
         if (!$this->hasSubmittedCompany($submittedCompany)) {
             $this->submittedCompanies->add($submittedCompany);
         }
-    }
-    
-    /**
-     * @return Collaborator[]
-     */
-    public function getCollaboratorsAdded()
-    {
-        return $this->collaboratorsAdded;
-    }
-    
-    /**
-     * @param Collaborator[] $collaboratorsAdded
-     */
-    public function setCollaboratorsAdded(array $collaboratorsAdded)
-    {
-        $this->collaboratorsAdded = $collaboratorsAdded;
     }
     
     /**

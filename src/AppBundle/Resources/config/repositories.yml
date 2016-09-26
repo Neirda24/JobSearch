@@ -1,0 +1,4 @@
+services:
+    app.repositpry.factory:
+        class: AppBundle\Repository\CustomRepositoryFactory
+        arguments: ['@security.token_storage']

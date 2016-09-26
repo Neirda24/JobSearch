@@ -21,13 +21,20 @@ class LoadSearchData extends AbstractFixture implements OrderedFixtureInterface
                 'dateStart' => '-1 month',
                 'dateEnd'   => 'now',
                 'owner'     => 'user-neirda24',
-                'details'   => 3,
+                'details'   => [
+                    ['company' => 'company-google', 'description' => 'skype first interview'],
+                    ['company' => 'company-mireille', 'description' => 'by call. offer made'],
+                    ['company' => 'company-google', 'description' => 'offer made'],
+                ],
             ],
             'after_iron'    => [
                 'dateStart' => '-2 month',
                 'dateEnd'   => '-1 month',
                 'owner'     => 'user-neirda',
-                'details'   => 2
+                'details'   => [
+                    ['company' => 'company-mireille', 'description' => 'by call. offer made'],
+                    ['company' => 'company-google', 'description' => 'offer made'],
+                ],
             ],
         ];
         
@@ -38,13 +45,18 @@ class LoadSearchData extends AbstractFixture implements OrderedFixtureInterface
             $search->setDateStart(new DateTime($config['dateStart']));
             $search->setDateEnd(new DateTime($config['dateEnd']));
             
-            for ($i = 0; $i < $config['details']; $i++) {
+            $i = 0;
+            foreach ($config['details'] as $detailConfig) {
+                $i++;
                 $detail = new Details();
                 $detail->setSearch($search);
+                $detail->setCompany($this->getReference($detailConfig['company']));
+                $detail->setDescription($detailConfig['description']);
                 $this->addReference('detail-' . $name . '-' . $i, $detail);
                 
                 $manager->persist($detail);
             }
+            unset($i);
             
             $manager->persist($search);
             

@@ -35,9 +35,17 @@ class Details
     private $search;
     
     /**
+     * @var Company
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Company", inversedBy="searchDetails")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $company;
+    
+    /**
      * @var Collaborator[]
      *
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Company\Collaborator", mappedBy="inSearches")
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Company\Collaborator", mappedBy="searchDetails")
      */
     private $collaborators;
     
@@ -47,6 +55,13 @@ class Details
      * @ORM\Column(type="datetime", nullable=false)
      */
     private $createdAt;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
     
     /**
      * Details constructor.
@@ -100,7 +115,7 @@ class Details
     {
         if (!$this->collaborators->contains($collaborator)) {
             $this->collaborators->add($collaborator);
-            $collaborator->addInSearch($this);
+            $collaborator->addSearchDetails($this);
         }
     }
     
@@ -128,6 +143,39 @@ class Details
         return $this->collaborators->map(function (Collaborator $collaborator) {
             return $collaborator->getCompany();
         });
+    }
+    
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+    
+    /**
+     * @param string $description
+     */
+    public function setDescription(string $description = null)
+    {
+        $this->description = $description;
+    }
+    
+    /**
+     * @return Company
+     */
+    public function getCompany()
+    {
+        return $this->company;
+    }
+    
+    /**
+     * @param Company $company
+     */
+    public function setCompany(Company $company)
+    {
+        $this->company = $company;
+        $company->addSearchDetails($this);
     }
     
     /**

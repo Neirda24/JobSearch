@@ -2,12 +2,19 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Company;
 use AppBundle\Entity\Search;
+use AppBundle\Entity\Search\Details;
+use AppBundle\Form\Search\DetailsType;
 use AppBundle\Form\SearchType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @Route("/dashboard")
+ */
 class SearchController extends AbstractController
 {
     /**
@@ -55,6 +62,37 @@ class SearchController extends AbstractController
     }
     
     /**
+     * @Route("/search/{id}/{company_id}/details/create", name="search_details_create", methods={"GET", "POST"})
+     * @Security("search.isOwner(user)")
+     * @ParamConverter("company", options={"id" = "company_id"})
+     */
+    public function createDetailsAction(Request $request, Search $search, Company $company)
+    {
+        $details = new Details();
+        $details->setSearch($search);
+        $details->setCompany($company);
+        $form   = $this->createForm(DetailsType::class, $details, [
+            'method' => Request::METHOD_POST,
+        ]);
+        
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($details);
+            $em->flush();
+            
+            return $this->redirectToRoute('search_view', ['id' => $search->getId(), '_fragment' => $details->getId()]);
+        }
+        
+        return $this->render('AppBundle:Search/Details:create.html.twig', [
+            'form' => $form->createView(),
+            'search' => $search,
+            'company' => $company,
+        ]);
+    }
+    
+    /**
      * @Route("/search/edit/{id}", name="search_edit", methods={"GET", "PUT"})
      * @Security("search.isOwner(user)")
      */
@@ -80,13 +118,19 @@ class SearchController extends AbstractController
     }
     
     /**
-     * @Route("/search/view/{id}", name="search_view", methods={"GET"})
+     * @Route("/search/{id}", name="search_view")
      * @Security("search.isOwner(user)")
      */
-    public function viewAction(Search $search)
+    public function dashboardSearchAction(Search $search)
     {
-        return $this->render('AppBundle:Search:view.html.twig', [
-            'search' => $search,
+        $em                = $this->getDoctrine()->getManager();
+        $companyRepository = $em->getRepository('AppBundle:Company');
+        
+        $companies = $companyRepository->fetchGroupedForDashboard($search);
+        
+        return $this->render('AppBundle:Front:dashboard/search.html.twig', [
+            'search'    => $search,
+            'companies' => $companies,
         ]);
     }
 }
