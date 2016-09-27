@@ -4,7 +4,6 @@ namespace AppBundle\Entity;
 
 use AppBundle\Entity\Common\Address;
 use AppBundle\Entity\Common\Siret;
-use AppBundle\Entity\Company\Collaborator;
 use AppBundle\Entity\Search\Details;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -104,7 +103,7 @@ class Company
     {
         $this->searchDetails = new ArrayCollection();
         $this->siret         = new Siret();
-        $this->address         = new Address();
+        $this->address       = new Address();
     }
     
     /**
@@ -164,7 +163,7 @@ class Company
     }
     
     /**
-     * @return Details[]
+     * @return Search[]|ArrayCollection
      */
     public function getSearchDetails()
     {
@@ -198,6 +197,14 @@ class Company
             $this->searchDetails->add($searchDetails);
             $searchDetails->setCompany($this);
         }
+    }
+    
+    /**
+     * @return int
+     */
+    public function countSearchDetails()
+    {
+        return $this->getSearchDetails()->count();
     }
     
     /**
@@ -259,7 +266,7 @@ class Company
             return ($this->owner->getId() === $user->getId());
         }
         
-        return null;
+        return false;
     }
     
     /**
@@ -268,5 +275,13 @@ class Company
     public function prePersist()
     {
         $this->setCreatedAt(new DateTime('now'));
+    }
+    
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getName();
     }
 }

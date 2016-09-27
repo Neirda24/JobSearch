@@ -64,6 +64,9 @@ doctrine:
                 mappings:
                     AppBundle: ~
                     FOSUserBundle: ~
+                dql:
+                    string_functions:
+                         ifnull: DoctrineExtensions\Query\Mysql\IfNull
 
 doctrine_migrations:
     dir_name: "%kernel.root_dir%/database/DoctrineMigrations"

@@ -9,6 +9,6 @@
             {% endfor %}
         </div>
     {% endif %}
-    <h1>{{ search.name }} > {{ company.name }}</h1>
+    <h1><a href="{{ path('search_view', {'id': search.id}) }}">{{ search.name }}</a> > {{ company.name }}</h1>
     {% include 'AppBundle:Search/Details/Form:create_edit.html.twig' %}
 {% endblock content %}

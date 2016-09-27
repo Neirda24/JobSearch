@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Company;
 use AppBundle\Entity\Search;
 use AppBundle\Entity\Search\Details;
+use AppBundle\Form\Company\ListCompanyType;
 use AppBundle\Form\Search\DetailsType;
 use AppBundle\Form\SearchType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -71,7 +72,7 @@ class SearchController extends AbstractController
         $details = new Details();
         $details->setSearch($search);
         $details->setCompany($company);
-        $form   = $this->createForm(DetailsType::class, $details, [
+        $form = $this->createForm(DetailsType::class, $details, [
             'method' => Request::METHOD_POST,
         ]);
         
@@ -86,8 +87,8 @@ class SearchController extends AbstractController
         }
         
         return $this->render('AppBundle:Search/Details:create.html.twig', [
-            'form' => $form->createView(),
-            'search' => $search,
+            'form'    => $form->createView(),
+            'search'  => $search,
             'company' => $company,
         ]);
     }
@@ -128,9 +129,15 @@ class SearchController extends AbstractController
         
         $companies = $companyRepository->fetchGroupedForDashboard($search);
         
+        $addCompanyForm = $this->createForm(ListCompanyType::class, null, [
+            'method' => Request::METHOD_POST,
+            'search' => $search,
+        ]);
+        
         return $this->render('AppBundle:Front:dashboard/search.html.twig', [
-            'search'    => $search,
-            'companies' => $companies,
+            'search'         => $search,
+            'companies'      => $companies,
+            'addCompanyForm' => $addCompanyForm->createView(),
         ]);
     }
 }

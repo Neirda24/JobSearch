@@ -7,9 +7,6 @@ use AppBundle\Form\CompanyType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
-use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
-use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
 class CompanyController extends AbstractController
 {
@@ -46,27 +43,14 @@ class CompanyController extends AbstractController
             $em->persist($company);
             $em->flush($company);
             
-            // creating the ACL
-            $aclProvider    = $this->get('security.acl.provider');
-            $objectIdentity = ObjectIdentity::fromDomainObject($company);
-            $acl            = $aclProvider->createAcl($objectIdentity);
-            
-            // retrieving the security identity of the currently logged-in user
-            $user             = $this->getUser();
-            $securityIdentity = UserSecurityIdentity::fromAccount($user);
-            
-            // grant operator access
-            $maskBuilder = new MaskBuilder();
-            $maskBuilder
-                ->add(MaskBuilder::MASK_OPERATOR)
-                ->remove(MaskBuilder::MASK_DELETE)
-            ;
-            
-            $mask = $maskBuilder->get();
-            $acl->insertObjectAce($securityIdentity, $mask);
-            $aclProvider->updateAcl($acl);
-            
-            return $this->redirectToRoute('company_view', ['id' => $company->getId()]);
+            if ($request->query->has('search')) {
+                return $this->redirectToRoute('search_details_create', [
+                    'id'         => $request->query->get('search'),
+                    'company_id' => $company->getId(),
+                ]);
+            } else {
+                return $this->redirectToRoute('company_view', ['id' => $company->getId()]);
+            }
         }
         
         return $this->render('AppBundle:Company:create.html.twig', [
@@ -76,7 +60,7 @@ class CompanyController extends AbstractController
     
     /**
      * @Route("/company/edit/{id}", name="company_edit", methods={"GET", "PUT"})
-     * @Security("is_granted('EDIT', company) or has_role('ROLE_ADMIN')")
+     * @Security("company.isOwner(user) or is_granted('ROLE_ADMIN')")
      */
     public function editAction(Request $request, Company $company)
     {
@@ -90,8 +74,12 @@ class CompanyController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($company);
             $em->flush($company);
-    
-            return $this->redirectToRoute('company_view', ['id' => $company->getId()]);
+            
+            if ($request->query->has('search')) {
+                return $this->redirectToRoute('search_view', ['id' => $request->query->get('search'), '_fragment' => $company->getId()]);
+            } else {
+                return $this->redirectToRoute('company_view', ['id' => $company->getId()]);
+            }
         }
         
         return $this->render('AppBundle:Company:edit.html.twig', [

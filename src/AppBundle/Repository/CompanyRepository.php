@@ -4,8 +4,8 @@ namespace AppBundle\Repository;
 
 use AppBundle\Entity\Company;
 use AppBundle\Entity\Search;
-use AppBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * CompanyRepository
@@ -15,21 +15,52 @@ use Doctrine\ORM\EntityRepository;
  */
 class CompanyRepository extends EntityRepository
 {
+    /**
+     * @param Search $search
+     *
+     * @return Company[]
+     */
     public function fetchGroupedForDashboard(Search $search)
     {
         $qb = $this->createQueryBuilder('c');
         
         $qb
-            ->select('c as company')
-            ->addSelect('COUNT(c.id) as count_search_details')
+            ->select('DISTINCT c')
+            ->addSelect('sd')
             ->leftJoin('c.searchDetails', 'sd')
             ->leftJoin('sd.search', 's')
             ->andWhere($qb->expr()->eq('s', ':search'))
             ->setParameter('search', $search)
-            ->groupBy('c.id')
-            ->orderBy('sd.createdAt')
-        ;
+            ->orderBy('IFNULL(sd.createdAt, c.createdAt)', 'DESC');
         
         return $qb->getQuery()->getResult();
+    }
+    
+    /**
+     * @param Search $search
+     *
+     * @return QueryBuilder
+     */
+    public function excludeFromSearchQB(Search $search)
+    {
+        $qb = $this->createQueryBuilder('c');
+        
+        $qb
+            ->addSelect('sd')
+            ->addSelect('s')
+            ->leftJoin('c.searchDetails', 'sd')
+            ->leftJoin('sd.search', 's')
+            ->where($qb->expr()->orX(
+                $qb->expr()->isNull('sd.company'),
+                $qb->expr()->andX(
+                    $qb->expr()->eq('s.owner', ':owner'),
+                    $qb->expr()->isNotNull('sd.company'),
+                    $qb->expr()->isNull('sd.search')
+                )
+            ))
+            ->setParameter('owner', $search->getOwner())
+            ->groupBy('c.id');
+        
+        return $qb;
     }
 }

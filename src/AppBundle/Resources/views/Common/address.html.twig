@@ -1,0 +1,33 @@
+{% set addressResult = '' %}
+
+{% if address.street is not empty %}
+    {% if 0 < address.streetNumber %}
+        {% set addressResult = '<span class="address_streetNumber">' ~ address.streetNumber ~ '</span> ' %}
+    {% endif %}
+    {% set addressResult = addressResult ~ '<span class="address_street">' ~ address.street ~ '</span>' %}
+{% endif %}
+
+{% if address.postalCode is not empty %}
+    {% if addressResult is not empty %}
+        {% set addressResult = addressResult ~ ',<br />' %}
+    {% endif %}
+    {% set addressResult = addressResult ~ '<span class="address_postalCode">' ~ address.postalCode ~ '</span>' %}
+{% endif %}
+
+{% if address.city is not empty %}
+    {% if addressResult is not empty %}
+        {% set addressResult = addressResult ~ ' ' %}
+    {% endif %}
+    {% set addressResult = addressResult ~ '<span class="address_city">' ~ address.city ~ '</span>' %}
+{% endif %}
+
+{% if address.country is not empty %}
+    {% if addressResult is not empty %}
+        {% set addressResult = addressResult ~ '<br />' %}
+    {% endif %}
+    {% set addressResult = addressResult ~ '<span class="address_country">' ~ address.country|country ~ '</span>' %}
+{% endif %}
+
+{% autoescape %}
+{{ addressResult|raw }}
+{% endautoescape %}
