@@ -15,4 +15,5 @@
 /vendor/
 /web/bundles/
 /web/assetic/
+/components/
 docker-compose.yml
