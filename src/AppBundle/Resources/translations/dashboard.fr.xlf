@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="none" target-language="fr" datatype="plaintext" original="file.ext">
+        <body>
+            <!-- Search -->
+            <trans-unit id="search_actives">
+                <source>search.actives</source>
+                <target>En cours</target>
+            </trans-unit>
+            <trans-unit id="search_finished">
+                <source>search.finished</source>
+                <target>Fermés</target>
+            </trans-unit>
+            <trans-unit id="search_new">
+                <source>search.new</source>
+                <target>Nouveau</target>
+            </trans-unit>
+            <trans-unit id="search_start_date">
+                <source>search.start_date</source>
+                <target>%date% (%date_diff%)</target>
+            </trans-unit>
+            <trans-unit id="search_end_date">
+                <source>search.end_date</source>
+                <target>%date% (%date_diff%)</target>
+            </trans-unit>
+            <trans-unit id="search_first_detail_no_description">
+                <source>search.first_detail.no_description</source>
+                <target>Aucune description</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

@@ -150,8 +150,9 @@ class User extends BaseUser
      */
     public function getActiveSearches()
     {
-        return $this->searches->filter(function (Search $search) {
-            return (null === $search->getDateEnd());
+        $today = new DateTime();
+        return $this->searches->filter(function (Search $search) use ($today) {
+            return (null === $search->getDateEnd() || $search->getDateEnd() > $today);
         });
     }
     
@@ -160,8 +161,9 @@ class User extends BaseUser
      */
     public function getFinishedSearches()
     {
-        return $this->searches->filter(function (Search $search) {
-            return (null !== $search->getDateEnd());
+        $today = new DateTime();
+        return $this->searches->filter(function (Search $search) use ($today) {
+            return (null !== $search->getDateEnd() && $search->getDateEnd() < $today);
         });
     }
     

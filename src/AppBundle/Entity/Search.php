@@ -175,55 +175,6 @@ class Search
     }
     
     /**
-     * @return ArrayCollection[]|ArrayCollection
-     */
-    public function fetchGroupedDetails()
-    {
-        $groupedDetails = new ArrayCollection();
-        
-        foreach ($this->details as $detail) {
-            foreach ($detail->getCollaborators() as $collaborator) {
-                if (!$groupedDetails->containsKey($collaborator->getCompany()->getId())) {
-                    $groupedDetails->set($collaborator->getCompany()->getId(), new ArrayCollection());
-                }
-                if (!$groupedDetails->get($collaborator->getCompany()->getId())->containsKey($detail->getId())) {
-                    $groupedDetails->get($collaborator->getCompany()->getId())->set($detail->getId(), $detail);
-                }
-            }
-        }
-        
-        return $groupedDetails;
-    }
-    
-    /**
-     * @return ArrayCollection|ArrayCollection[]
-     */
-    public function fetchGroupedOrderedDetails()
-    {
-        $groupedDetails = $this->fetchGroupedDetails();
-        
-        foreach ($groupedDetails as $groupedDetail) {
-            uasort($groupedDetail, function (Details $details1, Details $details2) {
-                if ($details1->getCreatedAt() === $details2->getCreatedAt()) {
-                    return 0;
-                }
-    
-                return ($details1->getCreatedAt() < $details2->getCreatedAt()) ? -1 : 1;
-            });
-        }
-        
-        uasort($groupedDetails, function (ArrayCollection $details1, ArrayCollection $details2) {
-            if ($details1->first()->getCreatedAt() === $details2->first()->getCreatedAt()) {
-                return 0;
-            }
-    
-            return ($details1->first()->getCreatedAt() < $details2->first()->getCreatedAt()) ? -1 : 1;
-        });
-        
-        return $groupedDetails;
-    }
-    
-    /**
      * @Assert\Callback()
      *
      * @param ExecutionContextInterface $context

@@ -1,31 +1,89 @@
 {% extends 'AppBundle::base.html.twig' %}
+{% trans_default_domain 'dashboard' %}
 
 {% block content %}
     {% set user = app.user %}
     {# @var user \AppBundle\Entity\User #}
     <div class="container">
-        <div>
-            <h1>En cours | <a href="{{ path('search_create') }}">New</a></h1>
-            {% for search in user.activeSearches %}
-                <div>
-                    <div>
-                        <span><a href="{{ path('search_view', {'id': search.id}) }}">{{ search.name }}</a></span>
-                        <span>{{ search.dateStart|date('Y M d') }}</span>
-                    </div>
-                </div>
-            {% endfor %}
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">{{ 'search.actives'|trans }}&nbsp;
+                    <small><a href="{{ path('search_create') }}">{{ 'search.new'|trans }}</a></small>
+                </h1>
+            </div>
         </div>
-        <div>
-            <h1>Finished</h1>
-            {% for search in user.finishedSearches %}
-                <div>
-                    <div>
-                        <span><a href="{{ path('search_view', {'id': search.id}) }}">{{ search.name }}</a></span>
-                        <span>{{ search.dateStart|date('Y M d') }}</span>
-                        <span>{{ search.dateEnd|date('Y M d') }}</span>
+
+        {% for row in user.activeSearches|batch(4) %}
+            <div class="row">
+                {% for search in row %}
+                    {# @var search \AppBundle\Entity\Search #}
+                    <div class="col-md-3 portfolio-item">
+                        <a href="#">
+                            <img class="img-responsive" src="http://placehold.it/700x400" alt="">
+                        </a>
+                        <h3>
+                            <a href="{{ path('search_view', {'id': search.id}) }}">{{ search.name|title }}</a>
+                        </h3>
+                        <p>
+                            <span class="glyphicon glyphicon-time"></span>&nbsp;{{ 'search.start_date'|trans({
+                                '%date%': search.dateStart|localizeddate('full', 'none'),
+                                '%date_diff%': search.dateStart|time_diff
+                            }) }}
+                        </p>
+                        <p>
+                            {% if search.details.count > 0 %}
+                                {{ search.details.first.description|md2html }}
+                            {% else %}
+                                {{ 'search.first_detail.no_description'|trans }}
+                            {% endif %}
+                        </p>
                     </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
+            <hr>
+        {% endfor %}
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">{{ 'search.finished'|trans }}</h1>
+            </div>
         </div>
+
+        {% for row in user.finishedSearches|batch(4) %}
+            <div class="row">
+                {% for search in row %}
+                    {# @var search \AppBundle\Entity\Search #}
+                    <div class="col-md-3 portfolio-item">
+                        <a href="#">
+                            <img class="img-responsive" src="http://placehold.it/700x400" alt="">
+                        </a>
+                        <h3>
+                            <a href="{{ path('search_view', {'id': search.id}) }}">{{ search.name|title }}</a>
+                        </h3>
+                        <p>
+                            <span class="glyphicon glyphicon-time"></span>&nbsp;{{ 'search.end_date'|trans({
+                                '%date%': search.dateEnd|localizeddate('full', 'none'),
+                                '%date_diff%': search.dateEnd|time_diff
+                            }) }}
+                        </p>
+                        <p>
+                            <span class="glyphicon glyphicon-time"></span>&nbsp;{{ 'search.start_date'|trans({
+                                '%date%': search.dateStart|localizeddate('full', 'none'),
+                                '%date_diff%': search.dateStart|time_diff
+                            }) }}
+                        </p>
+                        <p>
+                            {% if search.details.count > 0 %}
+                                {{ search.details.first.description|md2html }}
+                            {% else %}
+                                {{ 'search.first_detail.no_description'|trans }}
+                            {% endif %}
+                        </p>
+                    </div>
+
+                {% endfor %}
+            </div>
+            <hr>
+        {% endfor %}
     </div>
 {% endblock content %}

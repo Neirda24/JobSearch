@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="none" target-language="fr" datatype="plaintext" original="file.ext">
+        <body>
+            <!-- Ago -->
+            <trans-unit id="diff_ago_year">
+                <source>diff.ago.year</source>
+                <target>il y a %count% an|il y a %count% ans</target>
+            </trans-unit>
+            <trans-unit id="diff_ago_month">
+                <source>diff.ago.month</source>
+                <target>il y a %count% mois</target>
+            </trans-unit>
+            <trans-unit id="diff_ago_day">
+                <source>diff.ago.day</source>
+                <target>il y a %count% jour|il y a %count% jours</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
