@@ -54,7 +54,7 @@ class SearchController extends AbstractController
             $em->persist($search);
             $em->flush($search);
             
-            return $this->redirectToRoute('search_view', ['id' => $search->getId()]);
+            return $this->redirectToRoute('dashboard');
         }
         
         return $this->render('AppBundle:Search:create.html.twig', [
@@ -63,7 +63,7 @@ class SearchController extends AbstractController
     }
     
     /**
-     * @Route("/search/{id}/{company_id}/details/create", name="search_details_create", methods={"GET", "POST"})
+     * @Route("/search/{id}/{company_id}/details/create", options={"expose"=true}, name="search_details_create", methods={"GET", "POST"})
      * @Security("search.isOwner(user)")
      * @ParamConverter("company", options={"id" = "company_id"})
      */
@@ -130,7 +130,6 @@ class SearchController extends AbstractController
         $companies = $companyRepository->fetchGroupedForDashboard($search);
         
         $addCompanyForm = $this->createForm(ListCompanyType::class, null, [
-            'method' => Request::METHOD_POST,
             'search' => $search,
         ]);
         

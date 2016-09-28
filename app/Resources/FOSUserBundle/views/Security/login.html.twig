@@ -1,0 +1,53 @@
+{% extends "AppBundle::base.html.twig" %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block header %}
+{% endblock header %}
+
+{% block start_body %}
+{% endblock start_body %}
+
+{% block end_body %}
+{% endblock end_body %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('/bundles/app/css/login/login.css') }}"/>
+{% endblock stylesheets %}
+
+{% block content %}
+    {% if error %}
+        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+
+    <div class="container">
+        <form action="{{ path("fos_user_security_check") }}" method="post" class="form-signin">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"/>
+            <h2 class="form-signin-heading">{{ 'layout.login'|trans }}</h2>
+
+            <label for="inputEmail" class="sr-only">{{ 'security.login.username'|trans }}</label>
+            <span class="input-group-addon"><i class="glyphicon glyphicon-user red"></i></span>
+            <input value="{{ last_username }}" type="text" id="inputEmail" class="form-control"
+                   placeholder="{{ 'security.login.username'|trans }}" name="_username" required="required"
+                   autofocus="autofocus"/>
+
+            <label for="inputPassword" class="sr-only">{{ 'security.login.password'|trans }}</label>
+            <span class="input-group-addon"><i class="glyphicon glyphicon-lock red"></i></span>
+            <input type="password" id="inputPassword" name="_password" class="form-control"
+                   placeholder="{{ 'security.login.password'|trans }}" required="required"/>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="remember_me" name="_remember_me"
+                           checked="checked"/>&nbsp;{{ 'security.login.remember_me'|trans }}
+                </label>
+            </div>
+            <button class="btn btn-lg btn-primary btn-block" type="submit" id="_submit"
+                    name="_submit">{{ 'security.login.submit'|trans }}</button>
+        </form>
+        <div class="form-signin">
+            <a class="btn btn-lg btn-info btn-block" role="button"
+                    href="{{ path('fos_user_registration_register') }}">{{ 'layout.register'|trans }}</a>
+        </div>
+    </div>
+{% endblock content %}

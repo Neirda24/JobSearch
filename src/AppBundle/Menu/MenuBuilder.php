@@ -36,23 +36,15 @@ class MenuBuilder
     public function createMainMenu()
     {
         $menu = $this->factory->createItem('root');
-        $menu->setExtra('translation_domain', 'menu');
-    
-        // COMPANIES
-        $companies = $menu->addChild('company.title', [
-            'dropdown' => true,
-            'caret'    => true,
-        ])->setExtra('translation_domain', 'menu');
-        $companies->addChild('company.list', ['route' => 'company_list'])->setExtra('translation_domain', 'menu');
-        $companies->addChild('company.create', ['route' => 'company_create'])->setExtra('translation_domain', 'menu');
-    
-        // SEARCH
-        $companies = $menu->addChild('search.title', [
-            'dropdown' => true,
-            'caret'    => true,
-        ])->setExtra('translation_domain', 'menu');
-        $companies->addChild('search.list', ['route' => 'search_list'])->setExtra('translation_domain', 'menu');
-        $companies->addChild('search.create', ['route' => 'search_create'])->setExtra('translation_domain', 'menu');
+        $menu->setChildrenAttribute('class', 'nav navbar-nav');
+        
+        if ($this->authorizationChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            // SEARCH
+            $companies = $menu->addChild('search.title');
+            $companies->addChild('search.list', ['route' => 'search_list']);
+            $companies->addChild('search.create', ['route' => 'search_create']);
+            $companies->setAttribute('dropdown', true);
+        }
         
         return $menu;
     }
@@ -63,14 +55,16 @@ class MenuBuilder
     public function createLoginMenu()
     {
         $menu = $this->factory->createItem('root');
-        $menu->setExtra('translation_domain', 'menu');
+        $menu->setChildrenAttribute('class', 'nav navbar-nav navbar-right');
         
         if ($this->authorizationChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
-            $menu->addChild('dashboard.title', ['route' => 'dashboard'])->setExtra('translation_domain', 'menu');
+            $menu->addChild('dashboard.title', ['route' => 'dashboard'])->setAttribute('icon', 'fa fa-list');
             $menu->addChild('layout.logout', ['route' => 'fos_user_security_logout'])->setExtra('translation_domain', 'FOSUserBundle');
         } else {
             $menu->addChild('layout.register', ['route' => 'fos_user_registration_register'])->setExtra('translation_domain', 'FOSUserBundle');
-            $menu->addChild('layout.login', ['route' => 'fos_user_security_login'])->setExtra('translation_domain', 'FOSUserBundle');
+            $menu->addChild('layout.login', ['route' => 'fos_user_security_login'])
+                ->setExtra('translation_domain', 'FOSUserBundle')
+                ->setAttribute('icon', 'fa fa-user');
         }
         
         return $menu;

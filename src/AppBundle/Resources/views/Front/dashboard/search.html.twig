@@ -6,26 +6,15 @@
         <h1>{{ search.name }}</h1>
     </div>
     <div>
-        {{ form_errors(addCompanyForm) }}
-        {{ form_start(addCompanyForm, {
-            'attr': {
-                'id': addCompanyForm.vars.id
-            }
-        }) }}
-        {{ form_errors(addCompanyForm.company) }}
         {{ form_label(addCompanyForm.company) }}
         {{ form_widget(addCompanyForm.company) }}
-
-        {{ form_widget(addCompanyForm._token) }}
-
-        <input type="submit" value="Add" />
-        {{ form_end(addCompanyForm) }}
+        <a id="{{ addCompanyForm.vars.id ~ '_add' }}" href="#">Add</a>
         &nbsp;|&nbsp;
         <a href="{{ path('company_create', {'search': search.id}) }}">New</a>
     </div>
     {% for company in companies %}
-        {# @var company \AppBundle\Entity\Company#}
-        <div id="{{ company.id }}">
+        {# @var company \AppBundle\Entity\Company #}
+        <div id="{{ 'company_' ~ company.id }}">
             <h2>
                 {{ company.name }} ({{ company.countSearchDetails() }})
                 {% if is_granted('IS_AUTHENTICATED_REMEMBERED') and (is_granted('ROLE_ADMIN') or is_granted('EDIT', company) or company.isOwner(app.user)) %}
@@ -42,6 +31,34 @@
                 <li><a href="{{ path('search_details_create', {'id': search.id, 'company_id': company.id}) }}">Add</a>
                 </li>
             </ul>
+            {% for detail in company.searchDetails %}
+                {# @var detail \AppBundle\Entity\Search\Details #}
+                <div id="{{ 'search_details_' ~ detail.id }}">
+                    <div>
+                        <h3>Date</h3>: {{ detail.createdAt|date('d m Y') }}
+                        <h3>Contacts</h3>: {{ detail.collaborators|join(', ') }}
+                        <h3>Description</h3>:
+                        <div class="markdown">
+                        {{ detail.description|md2html }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
     {% endfor %}
 {% endblock content %}
+
+{% block foot_javascripts %}
+    {{ parent() }}
+    <script>
+        $('#{{ addCompanyForm.company.vars.id }}').change(function () {
+            var company_selected = $('#{{ addCompanyForm.company.vars.id }}').val();
+
+            $('#{{ addCompanyForm.vars.id ~ '_add' }}').attr('href', Routing.generate('search_details_create', {
+                id: '{{ search.id }}',
+                company_id: company_selected
+            }));
+        });
+        $('#{{ addCompanyForm.company.vars.id }}').change();
+    </script>
+{% endblock foot_javascripts %}

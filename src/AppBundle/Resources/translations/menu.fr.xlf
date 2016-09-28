@@ -15,6 +15,24 @@
                 <source>company.create</source>
                 <target>Créer</target>
             </trans-unit>
+            <!-- Search -->
+            <trans-unit id="search_title">
+                <source>search.title</source>
+                <target>Mes recherches</target>
+            </trans-unit>
+            <trans-unit id="search_list">
+                <source>search.list</source>
+                <target>Liste</target>
+            </trans-unit>
+            <trans-unit id="search_create">
+                <source>search.create</source>
+                <target>Créer</target>
+            </trans-unit>
+            <!-- Dashboard -->
+            <trans-unit id="dashboard_title">
+                <source>dashboard.title</source>
+                <target>Dashboard</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

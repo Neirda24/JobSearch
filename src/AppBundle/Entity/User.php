@@ -146,6 +146,26 @@ class User extends BaseUser
     }
     
     /**
+     * @return Search[]|ArrayCollection
+     */
+    public function getActiveSearches()
+    {
+        return $this->searches->filter(function (Search $search) {
+            return (null === $search->getDateEnd());
+        });
+    }
+    
+    /**
+     * @return Search[]|ArrayCollection
+     */
+    public function getFinishedSearches()
+    {
+        return $this->searches->filter(function (Search $search) {
+            return (null !== $search->getDateEnd());
+        });
+    }
+    
+    /**
      * @param Search[] $searches
      */
     public function setSearches(array $searches)

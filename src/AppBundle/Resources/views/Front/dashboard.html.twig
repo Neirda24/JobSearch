@@ -1,27 +1,31 @@
 {% extends 'AppBundle::base.html.twig' %}
 
 {% block content %}
-    <div>
-        <h1>En cours</h1>
-        {% for search in app.user.searches if search.dateEnd is not null %}
-            <div>
+    {% set user = app.user %}
+    {# @var user \AppBundle\Entity\User #}
+    <div class="container">
+        <div>
+            <h1>En cours | <a href="{{ path('search_create') }}">New</a></h1>
+            {% for search in user.activeSearches %}
                 <div>
-                    <span><a href="{{ path('search_view', {'id': search.id}) }}">{{ search.name }}</a></span>
-                    <span>{{ search.dateStart|date('Y M d') }}</span>
+                    <div>
+                        <span><a href="{{ path('search_view', {'id': search.id}) }}">{{ search.name }}</a></span>
+                        <span>{{ search.dateStart|date('Y M d') }}</span>
+                    </div>
                 </div>
-            </div>
-        {% endfor %}
-    </div>
-    <div>
-        <h1>Finished</h1>
-        {% for search in app.user.searches if search.dateEnd is null %}
-            <div>
+            {% endfor %}
+        </div>
+        <div>
+            <h1>Finished</h1>
+            {% for search in user.finishedSearches %}
                 <div>
-                    <span><a href="{{ path('search_view', {'id': search.id}) }}">{{ search.name }}</a></span>
-                    <span>{{ search.dateStart|date('Y M d') }}</span>
-                    <span>{{ search.dateEnd|date('Y M d') }}</span>
+                    <div>
+                        <span><a href="{{ path('search_view', {'id': search.id}) }}">{{ search.name }}</a></span>
+                        <span>{{ search.dateStart|date('Y M d') }}</span>
+                        <span>{{ search.dateEnd|date('Y M d') }}</span>
+                    </div>
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
     </div>
 {% endblock content %}

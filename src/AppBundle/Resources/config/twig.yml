@@ -4,3 +4,10 @@ services:
         public: false
         tags:
             - { name: twig.extension }
+
+    app.twig.markdown_extension:
+            class:     AppBundle\Twig\MarkdownExtension
+            arguments: ['@app.utils.markdown']
+            public:    false
+            tags:
+                - { name: twig.extension }

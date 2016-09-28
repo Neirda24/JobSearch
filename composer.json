@@ -35,7 +35,12 @@
         "friendsofsymfony/user-bundle": "~2.0@dev",
         "knplabs/knp-menu-bundle": "^2.0",
         "symfony/security-acl": "^3.0",
-        "beberlei/DoctrineExtensions": "^1.0"
+        "beberlei/DoctrineExtensions": "^1.0",
+        "friendsofsymfony/jsrouting-bundle": "^1.6",
+        "twitter/bootstrap": "3.*",
+        "components/jquery": "1.11.1",
+        "symfony/assetic-bundle": "^2.8",
+        "erusev/parsedown": "^1.6"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
@@ -68,5 +73,23 @@
         "incenteev-parameters": {
             "file": "app/config/parameters.yml"
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "usman/charisma-theme",
+                "version": "2.0.0",
+                "dist": {
+                    "url": "https://github.com/usmanhalalit/charisma/archive/master.zip",
+                    "type": "zip"
+                },
+                "source": {
+                    "url": "https://github.com/usmanhalalit/charisma",
+                    "type": "git",
+                    "reference": ""
+                }
+            }
+        }
+    ]
 }
