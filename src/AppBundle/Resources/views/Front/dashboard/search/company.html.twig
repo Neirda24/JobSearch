@@ -1,0 +1,35 @@
+{# @var company \AppBundle\Entity\Company #}
+<h3>
+    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') and (is_granted('ROLE_ADMIN') or company.isOwner(app.user)) %}
+        <small>
+            <a href="{{ path('company_edit', {'id': company.id, 'search': search.id}) }}">
+                <span
+                        class="glyphicon glyphicon-edit"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="{{ 'form.company.editable'|trans({}, 'form') }}">
+                </span>
+            </a>
+        </small>
+    {% endif %}
+    {{ company.name|title }} <span class="badge">{{ company.countSearchDetails() }}</span>
+    <small>
+        <a href="{{ path('search_details_create', {'id': search.id, 'company_id': company.id}) }}">
+            <span
+                    class="glyphicon glyphicon-plus-sign text-green"
+                    data-toggle="tooltip"
+                    data-placement="right"
+                    title="{{ 'form.search.details.add'|trans({}, 'form') }}">
+            </span>
+        </a>
+    </small>
+</h3>
+<div class="container-fluid" style="margin-bottom: 5px">
+    <img class="img-responsive col-lg-5" src="http://placehold.it/150x150" alt="logo {{ company.name }}">
+    <div class="address col-lg-6 col-lg-offset-1">
+        <p class="address">
+            {% include 'AppBundle:Common:address.html.twig' with {'address': company.address} %}
+        </p>
+    </div>
+    <div class="clearfix"></div>
+</div>

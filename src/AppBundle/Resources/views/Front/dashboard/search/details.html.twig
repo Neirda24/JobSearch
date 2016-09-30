@@ -1,0 +1,32 @@
+{# @var detail \AppBundle\Entity\Search\Details #}
+<div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="heading_search_detail_{{ detail.id }}">
+        <h4 class="panel-title">
+            <a
+                    role="button"
+                    data-toggle="collapse"
+                    data-parent="#accordion_search_{{ search.id }}"
+                    href="#collapse_search_detail_{{ detail.id }}"
+                    aria-expanded="true"
+                    aria-controls="collapse_search_detail_{{ detail.id }}"
+            >
+                Le {{ detail.createdAt|localizeddate('full', 'none') }}
+            </a>
+        </h4>
+    </div>
+    <div
+            id="collapse_search_detail_{{ detail.id }}"
+            class="panel-collapse collapse"
+            role="tabpanel"
+            aria-labelledby="heading_search_detail_{{ detail.id }}"
+    >
+        <div class="panel-body">
+            {% if detail.collaborators.count > 0 %}
+                <p>Contacts: {{ detail.collaborators|join(', ') }}</p>
+            {% endif %}
+            <div class="markdown well">
+                {{ detail.description|md2html }}
+            </div>
+        </div>
+    </div>
+</div>

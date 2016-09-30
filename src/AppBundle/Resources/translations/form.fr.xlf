@@ -20,6 +20,12 @@
                 <target>Nouveau</target>
             </trans-unit>
 
+            <!-- Search -->
+            <trans-unit id="form_search_details_add">
+                <source>form.search.details.add</source>
+                <target>Ajouter un échange</target>
+            </trans-unit>
+
             <!-- Company -->
             <trans-unit id="form_company_title">
                 <source>form.company.title</source>
@@ -28,6 +34,10 @@
             <trans-unit id="form_company_name">
                 <source>form.company.name</source>
                 <target>Nom</target>
+            </trans-unit>
+            <trans-unit id="form_company_editable">
+                <source>form.company.editable</source>
+                <target>Editer</target>
             </trans-unit>
 
             <!-- Company -->
