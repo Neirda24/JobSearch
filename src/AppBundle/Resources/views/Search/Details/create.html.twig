@@ -2,13 +2,15 @@
 {% trans_default_domain 'form' %}
 
 {% block content %}
-    {% if app.session.flashBag.has('success') %}
-        <div class="alert alert-success">
-            {% for msg in app.session.flashBag.get('success') %}
-                {{ msg }}
-            {% endfor %}
-        </div>
-    {% endif %}
-    <h1><a href="{{ path('search_view', {'id': search.id}) }}">{{ search.name }}</a> > {{ company.name }}</h1>
-    {% include 'AppBundle:Search/Details/Form:create_edit.html.twig' %}
+    <div class="container">
+        {% if app.session.flashBag.has('success') %}
+            <div class="alert alert-success">
+                {% for msg in app.session.flashBag.get('success') %}
+                    {{ msg }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        <h1><a href="{{ path('search_view', {'id': search.id}) }}">{{ search.name }}</a> > {{ company.name }}</h1>
+        {% include 'AppBundle:Search/Details/Form:create_edit.html.twig' %}
+    </div>
 {% endblock content %}
