@@ -11,6 +11,14 @@
                 <source>form.submit.update</source>
                 <target>Mettre à jour</target>
             </trans-unit>
+            <trans-unit id="form_submit_add">
+                <source>form.submit.add</source>
+                <target>Ajouter</target>
+            </trans-unit>
+            <trans-unit id="form_submit_new">
+                <source>form.submit.new</source>
+                <target>Nouveau</target>
+            </trans-unit>
 
             <!-- Company -->
             <trans-unit id="form_company_title">

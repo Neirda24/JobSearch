@@ -2,50 +2,80 @@
 {# @var search \AppBundle\Entity\Search #}
 
 {% block content %}
-    <div>
-        <h1>{{ search.name }}</h1>
-    </div>
-    <div>
-        {{ form_label(addCompanyForm.company) }}
-        {{ form_widget(addCompanyForm.company) }}
-        <a id="{{ addCompanyForm.vars.id ~ '_add' }}" href="#">Add</a>
-        &nbsp;|&nbsp;
-        <a href="{{ path('company_create', {'search': search.id}) }}">New</a>
-    </div>
-    {% for company in companies %}
-        {# @var company \AppBundle\Entity\Company #}
-        <div id="{{ 'company_' ~ company.id }}">
-            <h2>
-                {{ company.name }} ({{ company.countSearchDetails() }})
-                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') and (is_granted('ROLE_ADMIN') or is_granted('EDIT', company) or company.isOwner(app.user)) %}
-                    <a href="{{ path('company_edit', {'id': company.id, 'search': search.id}) }}">Edit</a>
-                {% endif %}
-            </h2>
-            <div class="address">
-                Adresse:
-                <div class="address">
-                    {% include 'AppBundle:Common:address.html.twig' with {'address': company.address} %}
-                </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">
+                    {{ search.name }}
+                </h1>
             </div>
-            <ul>
-                <li><a href="{{ path('search_details_create', {'id': search.id, 'company_id': company.id}) }}">Add</a>
-                </li>
-            </ul>
-            {% for detail in company.searchDetails %}
-                {# @var detail \AppBundle\Entity\Search\Details #}
-                <div id="{{ 'search_details_' ~ detail.id }}">
-                    <div>
-                        <h3>Date</h3>: {{ detail.createdAt|date('d m Y') }}
-                        <h3>Contacts</h3>: {{ detail.collaborators|join(', ') }}
-                        <h3>Description</h3>:
-                        <div class="markdown">
-                        {{ detail.description|md2html }}
+        </div>
+        <div class="container-fluid">
+            <div class="form-group col-lg-4">
+                {{ form_widget(addCompanyForm.company, {
+                    'attr': {
+                        'class': 'col-lg-2',
+                        'placeholder': 'form.company.title'
+                    }
+                }) }}
+            </div>
+            <div class="form-group col-lg-3">
+                <a id="{{ addCompanyForm.vars.id ~ '_add' }}" href="#" class="btn btn-action btn-success">{{ 'form.submit.add'|trans({}, 'form') }}</a>
+                &nbsp;|&nbsp;
+                <a href="{{ path('company_create', {'search': search.id}) }}" class="btn btn-action btn-info">{{ 'form.submit.new'|trans({}, 'form') }}</a>
+            </div>
+        </div>
+        {% for row in companies|batch(3) %}
+            <div class="row">
+                {% for company in row %}
+                    {# @var company \AppBundle\Entity\Company #}
+                    <div class="col-md-4 portfolio-item">
+                        <h3>
+                        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') and (is_granted('ROLE_ADMIN') or is_granted('EDIT', company) or company.isOwner(app.user)) %}
+                            <small><a href="{{ path('company_edit', {'id': company.id, 'search': search.id}) }}"><span class="glyphicon glyphicon-edit"></span></a></small>
+                        {% endif %}
+                            {{ company.name|title }} <span class="badge">{{ company.countSearchDetails() }}</span>
+                            <small><a href="{{ path('search_details_create', {'id': search.id, 'company_id': company.id}) }}"><span class="glyphicon glyphicon-plus-sign text-green" data-toggle="tooltip" data-placement="right" title="Add interaction"></span></a></small>
+                        </h3>
+                        <div class="container-fluid" style="margin-bottom: 5px">
+                            <img class="img-responsive col-lg-5" src="http://placehold.it/150x150" alt="logo {{ company.name }}">
+                            <div class="address col-lg-6 col-lg-offset-1">
+                                <p class="address">
+                                    {% include 'AppBundle:Common:address.html.twig' with {'address': company.address} %}
+                                </p>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+
+                        <div class="panel-group" id="accordion_search_{{ search.id }}" role="tablist" aria-multiselectable="true">
+                        {% for detail in company.searchDetails %}
+                            {# @var detail \AppBundle\Entity\Search\Details #}
+                            <div class="panel panel-default">
+                                <div class="panel-heading" role="tab" id="heading_search_detail_{{ detail.id }}">
+                                    <h4 class="panel-title">
+                                        <a role="button" data-toggle="collapse" data-parent="#accordion_search_{{ search.id }}" href="#collapse_search_detail_{{ detail.id }}" aria-expanded="true" aria-controls="collapse_search_detail_{{ detail.id }}">
+                                            Le {{ detail.createdAt|localizeddate('full', 'none') }}
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapse_search_detail_{{ detail.id }}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading_search_detail_{{ detail.id }}">
+                                    <div class="panel-body">
+                                        {% if detail.collaborators.count > 0 %}
+                                            <p>Contacts: {{ detail.collaborators|join(', ') }}</p>
+                                        {% endif %}
+                                        <div class="markdown well">
+                                            {{ detail.description|md2html }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
                         </div>
                     </div>
-                </div>
-            {% endfor %}
-        </div>
-    {% endfor %}
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
 {% endblock content %}
 
 {% block foot_javascripts %}
@@ -60,5 +90,14 @@
             }));
         });
         $('#{{ addCompanyForm.company.vars.id }}').change();
+
+        $('div[role="tablist"] div[role="tabpanel"]').each(function() {
+            $(this).collapse('hide');
+        });
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+            $('select').select2();
+        });
     </script>
 {% endblock foot_javascripts %}

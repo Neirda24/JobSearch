@@ -42,6 +42,7 @@ class ListCompanyType extends AbstractType
             ->setRequired('search')
             ->setAllowedTypes('search', Search::class)
         ;
+        $resolver->setDefault('translation_domain', 'form');
     }
     
     /**

@@ -2,6 +2,11 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
     <file source-language="none" target-language="fr" datatype="plaintext" original="file.ext">
         <body>
+            <!-- Responsive -->
+            <trans-unit id="toogle_navigation">
+                <source>toogle.navigation</source>
+                <target>Menu</target>
+            </trans-unit>
             <!-- Company -->
             <trans-unit id="company_title">
                 <source>company.title</source>

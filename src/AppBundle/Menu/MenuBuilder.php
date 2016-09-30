@@ -33,25 +33,6 @@ class MenuBuilder
     /**
      * @return ItemInterface
      */
-    public function createMainMenu()
-    {
-        $menu = $this->factory->createItem('root');
-        $menu->setChildrenAttribute('class', 'nav navbar-nav');
-        
-        if ($this->authorizationChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
-            // SEARCH
-            $companies = $menu->addChild('search.title');
-            $companies->addChild('search.list', ['route' => 'search_list']);
-            $companies->addChild('search.create', ['route' => 'search_create']);
-            $companies->setAttribute('dropdown', true);
-        }
-        
-        return $menu;
-    }
-    
-    /**
-     * @return ItemInterface
-     */
     public function createLoginMenu()
     {
         $menu = $this->factory->createItem('root');
