@@ -14,3 +14,12 @@
         {% include 'AppBundle:Search/Details/Form:create_edit.html.twig' %}
     </div>
 {% endblock content %}
+
+{% block foot_javascripts %}
+    {{ parent() }}
+    <script>
+        $(function () {
+            $('select').select2();
+        });
+    </script>
+{% endblock foot_javascripts %}
