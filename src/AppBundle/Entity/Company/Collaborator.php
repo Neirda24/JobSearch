@@ -2,13 +2,13 @@
 
 namespace AppBundle\Entity\Company;
 
-use AppBundle\Entity\Company;
 use AppBundle\Entity\Search;
 use AppBundle\Entity\Search\Details;
-use AppBundle\Entity\User;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Table(name="collaborator")
@@ -43,9 +43,32 @@ class Collaborator
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $firstname;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $lastname;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     *
+     * @Assert\Email(checkHost=true, checkMX=true, strict="true")
+     */
+    private $email;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $phone;
     
     /**
      * Collaborator constructor.
@@ -119,7 +142,55 @@ class Collaborator
      */
     public function setFirstname(string $firstname)
     {
-        $this->firstname = trim($firstname);
+        $this->firstname = $firstname;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getLastname()
+    {
+        return $this->lastname;
+    }
+    
+    /**
+     * @param string $lastname
+     */
+    public function setLastname(string $lastname)
+    {
+        $this->lastname = $lastname;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+    
+    /**
+     * @param string $email
+     */
+    public function setEmail(string $email)
+    {
+        $this->email = $email;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+    
+    /**
+     * @param string $phone
+     */
+    public function setPhone(string $phone)
+    {
+        $this->phone = $phone;
     }
     
     /**
@@ -131,10 +202,70 @@ class Collaborator
     }
     
     /**
+     * @Assert\Callback()
+     *
+     * @param ExecutionContextInterface $context
+     * @param                           $payload
+     */
+    public function validate(ExecutionContextInterface $context, $payload)
+    {
+        $fieldsToCheck = [
+            'firstname',
+            'lastname'
+        ];
+        
+        foreach ($fieldsToCheck as $fieldToCheck) {
+            $value = $this->$fieldToCheck;
+            
+            if ('' !== trim($value)) {
+                return;
+            }
+        }
+        
+        $context->buildViolation('The collaborator should have at least a firstname or a lastname.')
+            ->atPath('firstName')
+            ->addViolation();
+    }
+    
+    /**
      * @return string
      */
     public function __toString()
     {
-        return $this->getFirstname();
+        $result = '';
+        if (null !== $this->getFirstname()) {
+            $result .= $this->getFirstname();
+        }
+        
+        if (null !== $this->getLastname()) {
+            if ('' !== trim($result)) {
+                $result .= ' ';
+            }
+            
+            $result .= $this->getLastname();
+        }
+        
+        if ('' !== trim($this->getEmail()) || '' !== trim($this->getPhone())) {
+            if ('' !== trim($result)) {
+                $result .= ' <';
+            }
+            
+            if ('' !== trim($this->getEmail())) {
+                $result .= $this->getEmail();
+            }
+            
+            if ('' !== trim($this->getPhone())) {
+                if ('' !== trim($this->getEmail())) {
+                    $result .= ', ';
+                }
+                $result .= $this->getPhone();
+            }
+            
+            if ('' !== trim($result)) {
+                $result .= '>';
+            }
+        }
+        
+        return $result;
     }
 }
