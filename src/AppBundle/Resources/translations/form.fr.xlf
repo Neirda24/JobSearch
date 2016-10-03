@@ -21,6 +21,22 @@
             </trans-unit>
 
             <!-- Search -->
+            <trans-unit id="form_search_new">
+                <source>form.search.new</source>
+                <target>Nouvelle recherche</target>
+            </trans-unit>
+            <trans-unit id="form_search_name">
+                <source>form.search.name</source>
+                <target>Nom de la recherche</target>
+            </trans-unit>
+            <trans-unit id="form_search_date_start">
+                <source>form.search.date_start</source>
+                <target>Du</target>
+            </trans-unit>
+            <trans-unit id="form_search_date_end">
+                <source>form.search.date_end</source>
+                <target>au</target>
+            </trans-unit>
             <trans-unit id="form_search_details_add">
                 <source>form.search.details.add</source>
                 <target>Ajouter un échange</target>

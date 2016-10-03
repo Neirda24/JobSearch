@@ -2,12 +2,45 @@
 {% trans_default_domain 'form' %}
 
 {% block content %}
-    {% if app.session.flashBag.has('success') %}
-        <div class="alert alert-success">
-            {% for msg in app.session.flashBag.get('success') %}
-                {{ msg }}
-            {% endfor %}
-        </div>
-    {% endif %}
-    {% include 'AppBundle:Search/Form:create_edit.html.twig' %}
+    <div class="container">
+        {% if app.session.flashBag.has('success') %}
+            <div class="alert alert-success">
+                {% for msg in app.session.flashBag.get('success') %}
+                    {{ msg }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        <h2>
+            <a href="{{ path('dashboard') }}" class="btn btn-primary">
+                <span class="glyphicon glyphicon-chevron-left"></span>&nbsp;{{ 'common.back_to_list'|trans({}, 'layout') }}
+            </a>
+            <span style="vertical-align: bottom">
+                {{ 'form.search.new'|trans }}
+            </span>
+        </h2>
+        {% include 'AppBundle:Search/Form:create_edit.html.twig' %}
+    </div>
 {% endblock content %}
+
+{% block foot_javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(function () {
+            $('#{{ form.date_start.vars.id }}').datetimepicker({
+                format: 'YYYY-MM-DD',
+                showTodayButton: true,
+                calendarWeeks: true,
+                allowInputToggle: true,
+                locale: '{{ app.request.locale }}'
+            });
+            $('#{{ form.date_end.vars.id }}').datetimepicker({
+                format: 'YYYY-MM-DD',
+                showTodayButton: true,
+                showClear: true,
+                calendarWeeks: true,
+                allowInputToggle: true,
+                locale: '{{ app.request.locale }}'
+            });
+        });
+    </script>
+{% endblock foot_javascripts %}

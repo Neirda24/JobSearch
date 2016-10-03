@@ -6,6 +6,7 @@
     <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}"/>
     {% endstylesheets %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/select2/4.0.3/css/select2.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/bootstrap.datetimepicker/4.17.42/css/bootstrap-datetimepicker.min.css">
 {% endblock stylesheets %}
 
 {% block head_javascripts %}
@@ -25,6 +26,8 @@
     {% endjavascripts %}
     <script src="https://cdn.jsdelivr.net/select2/4.0.3/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/select2/4.0.3/js/i18n/{{ app.request.locale|lower }}.js"></script>
+    <script src="https://cdn.jsdelivr.net/momentjs/2.15.1/moment-with-locales.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/bootstrap.datetimepicker/4.17.42/js/bootstrap-datetimepicker.min.js"></script>
 {% endblock foot_javascripts %}
 
 {% block header %}
