@@ -56,6 +56,13 @@ class Search
     private $dateEnd;
     
     /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean", options={"default": false})
+     */
+    private $closed = false;
+    
+    /**
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="searches")
@@ -172,6 +179,22 @@ class Search
     public function setDetails(array $details)
     {
         $this->details = $details;
+    }
+    
+    /**
+     * @return boolean
+     */
+    public function isClosed()
+    {
+        return $this->closed;
+    }
+    
+    /**
+     * @param boolean $closed
+     */
+    public function setClosed(bool $closed)
+    {
+        $this->closed = $closed;
     }
     
     /**

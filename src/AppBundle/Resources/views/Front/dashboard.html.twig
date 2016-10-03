@@ -18,9 +18,9 @@
                 {% for search in row %}
                     {# @var search \AppBundle\Entity\Search #}
                     <div class="col-md-3 portfolio-item">
-                        <a href="#">
-                            <img class="img-responsive" src="http://placehold.it/700x400" alt="">
-                        </a>
+                        {#<a href="#">#}
+                            {#<img class="img-responsive" src="http://placehold.it/700x400" alt="">#}
+                        {#</a>#}
                         <h3>
                             <a href="{{ path('search_view', {'id': search.id}) }}">{{ search.name|title }}</a>
                         </h3>
@@ -30,6 +30,14 @@
                                 '%date_diff%': search.dateStart|time_diff
                             }) }}
                         </p>
+                        {% if search.dateEnd is not null %}
+                        <p>
+                            <span class="glyphicon glyphicon-time"></span>&nbsp;{{ 'search.start_date'|trans({
+                                '%date%': search.dateStart|localizeddate('full', 'none'),
+                                '%date_diff%': search.dateStart|time_diff
+                            }) }}
+                        </p>
+                        {% endif %}
                         <p>
                             {% if search.details.count > 0 %}
                                 {{ search.details.first.description|md2html }}
@@ -54,9 +62,9 @@
                 {% for search in row %}
                     {# @var search \AppBundle\Entity\Search #}
                     <div class="col-md-3 portfolio-item">
-                        <a href="#">
-                            <img class="img-responsive" src="http://placehold.it/700x400" alt="">
-                        </a>
+                        {#<a href="#">#}
+                            {#<img class="img-responsive" src="http://placehold.it/700x400" alt="">#}
+                        {#</a>#}
                         <h3>
                             <a href="{{ path('search_view', {'id': search.id}) }}">{{ search.name|title }}</a>
                         </h3>
