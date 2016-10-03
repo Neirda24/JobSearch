@@ -54,7 +54,7 @@ class SearchController extends AbstractController
             $em->persist($search);
             $em->flush($search);
             
-            return $this->redirectToRoute('dashboard');
+            return $this->redirectToRoute('search_view', ['id' => $search->getId()]);
         }
         
         return $this->render('AppBundle:Search:create.html.twig', [

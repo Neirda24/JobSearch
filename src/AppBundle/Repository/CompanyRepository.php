@@ -43,23 +43,26 @@ class CompanyRepository extends EntityRepository
      */
     public function excludeFromSearchQB(Search $search)
     {
-        $qb = $this->createQueryBuilder('c');
-        
-        $qb
-            ->addSelect('sd')
-            ->addSelect('s')
+        $companyIdsQb = $this->createQueryBuilder('c');
+    
+        $companyIds = $companyIdsQb
+            ->select('c.id')
             ->leftJoin('c.searchDetails', 'sd')
             ->leftJoin('sd.search', 's')
-            ->where($qb->expr()->orX(
-                $qb->expr()->isNull('sd.company'),
-                $qb->expr()->andX(
-                    $qb->expr()->eq('s.owner', ':owner'),
-                    $qb->expr()->isNotNull('sd.company'),
-                    $qb->expr()->isNull('sd.search')
-                )
-            ))
-            ->setParameter('owner', $search->getOwner())
-            ->groupBy('c.id');
+            ->where($companyIdsQb->expr()->eq('s', ':search'))
+            ->setParameter('search', $search)
+            ->groupBy('c.id')
+            ->getQuery()
+            ->getResult()
+        ;
+    
+        $qb = $this->createQueryBuilder('c');
+        
+        if (count($companyIds) > 0) {
+            $qb
+                ->where($qb->expr()->notIn('c.id', ':companyIds'))
+                ->setParameter('companyIds', $companyIds);
+        }
         
         return $qb;
     }
