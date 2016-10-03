@@ -7,7 +7,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">{{ 'search.actives'|trans }}&nbsp;
+                <h1 class="page-header">{{ 'search.actives'|trans }}
                     <small><a href="{{ path('search_create') }}">{{ 'search.new'|trans }}</a></small>
                 </h1>
             </div>
@@ -48,7 +48,9 @@
                     </div>
                 {% endfor %}
             </div>
-            <hr>
+            {% if not loop.last %}
+                <hr>
+            {% endif %}
         {% endfor %}
 
         <div class="row">
@@ -88,10 +90,11 @@
                             {% endif %}
                         </p>
                     </div>
-
                 {% endfor %}
             </div>
-            <hr>
+            {% if not loop.last %}
+                <hr>
+            {% endif %}
         {% endfor %}
     </div>
 {% endblock content %}
