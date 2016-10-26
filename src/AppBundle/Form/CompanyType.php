@@ -19,7 +19,7 @@ class CompanyType extends AbstractType
      * @var AuthorizationCheckerInterface
      */
     private $authorizationChecker;
-    
+
     /**
      * AddressType constructor.
      *
@@ -29,7 +29,7 @@ class CompanyType extends AbstractType
     {
         $this->authorizationChecker = $authorizationChecker;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -41,13 +41,14 @@ class CompanyType extends AbstractType
             ])
             ->add('address', AddressType::class, [
                 'required' => false,
-            ]);
-        
+            ])
+        ;
+
         $authorizationChecker = $this->authorizationChecker;
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($authorizationChecker) {
             $company = $event->getData();
             $form    = $event->getForm();
-            
+
             if (!$company || null === $company->getId() || $authorizationChecker->isGranted('ROLE_ADMIN') || $authorizationChecker->isGranted('OWNER', $company)) {
                 $form
                     ->add('siret', SiretType::class, [
@@ -56,7 +57,7 @@ class CompanyType extends AbstractType
             }
         });
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -69,7 +70,7 @@ class CompanyType extends AbstractType
             'cascade_validation' => true,
         ]);
     }
-    
+
     /**
      * {@inheritdoc}
      */

@@ -19,14 +19,14 @@ class ListCompanyType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $search = $options['search'];
-        
+
         $builder
             ->add('company', EntityType::class, [
-                'required' => true,
-                'class'    => Company::class,
-                'multiple' => false,
-                'expanded' => false,
-                'group_by' => function(Company $company) {
+                'required'      => true,
+                'class'         => Company::class,
+                'multiple'      => false,
+                'expanded'      => false,
+                'group_by'      => function (Company $company) {
                     return Intl::getRegionBundle()->getCountryName($company->getAddress()->getCountry());
                 },
                 'query_builder' => function (CompanyRepository $er) use ($search) {
@@ -34,7 +34,7 @@ class ListCompanyType extends AbstractType
                 },
             ]);
     }
-    
+
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
@@ -44,7 +44,7 @@ class ListCompanyType extends AbstractType
         ;
         $resolver->setDefault('translation_domain', 'form');
     }
-    
+
     /**
      * {@inheritdoc}
      */

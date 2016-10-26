@@ -7,6 +7,7 @@
                 <source>toogle.navigation</source>
                 <target>Menu</target>
             </trans-unit>
+
             <!-- Company -->
             <trans-unit id="company_title">
                 <source>company.title</source>
@@ -20,6 +21,7 @@
                 <source>company.create</source>
                 <target>Créer</target>
             </trans-unit>
+
             <!-- Search -->
             <trans-unit id="search_title">
                 <source>search.title</source>
@@ -33,10 +35,17 @@
                 <source>search.create</source>
                 <target>Créer</target>
             </trans-unit>
+
             <!-- Dashboard -->
             <trans-unit id="dashboard_title">
                 <source>dashboard.title</source>
                 <target>Dashboard</target>
+            </trans-unit>
+
+            <!-- Contacts -->
+            <trans-unit id="contacts_title">
+                <source>contacts.title</source>
+                <target>Mes contacts</target>
             </trans-unit>
         </body>
     </file>

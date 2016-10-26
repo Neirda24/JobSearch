@@ -6,6 +6,10 @@
                 <source>common.back_to_list</source>
                 <target>Retour a la liste</target>
             </trans-unit>
+            <trans-unit id="common_actions">
+                <source>common.actions</source>
+                <target>Actions</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

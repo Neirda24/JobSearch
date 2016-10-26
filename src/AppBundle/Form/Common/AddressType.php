@@ -37,9 +37,10 @@ class AddressType extends AbstractType
             ])
             ->add('country', CountryType::class, [
                 'required' => true,
-            ]);
+            ])
+        ;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -51,7 +52,7 @@ class AddressType extends AbstractType
             'translation_domain' => 'form',
         ]);
     }
-    
+
     /**
      * {@inheritdoc}
      */

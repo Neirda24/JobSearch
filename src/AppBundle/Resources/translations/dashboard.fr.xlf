@@ -27,6 +27,16 @@
                 <source>search.first_detail.no_description</source>
                 <target>Aucune description</target>
             </trans-unit>
+
+            <!-- Collaborator -->
+            <trans-unit id="collaborator_list">
+                <source>collaborator.list</source>
+                <target>Liste des contacts</target>
+            </trans-unit>
+            <trans-unit id="collaborator_new">
+                <source>collaborator.new</source>
+                <target>Nouveau</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

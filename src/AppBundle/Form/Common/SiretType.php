@@ -21,9 +21,10 @@ class SiretType extends AbstractType
             ])
             ->add('nic', IntegerType::class, [
                 'required' => true,
-            ]);
+            ])
+        ;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -35,7 +36,7 @@ class SiretType extends AbstractType
             'translation_domain' => 'form',
         ]);
     }
-    
+
     /**
      * {@inheritdoc}
      */

@@ -15,7 +15,7 @@ class AddCollaboratorType extends AbstractType
      * @var TokenStorageInterface
      */
     private $tokenStorage;
-    
+
     /**
      * AddressType constructor.
      *
@@ -25,7 +25,7 @@ class AddCollaboratorType extends AbstractType
     {
         $this->tokenStorage = $tokenStorage;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -37,7 +37,7 @@ class AddCollaboratorType extends AbstractType
                 'entry_type' => CollaboratorType::class,
             ]);
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -50,7 +50,7 @@ class AddCollaboratorType extends AbstractType
             'cascade_validation' => true,
         ]);
     }
-    
+
     /**
      * {@inheritdoc}
      */

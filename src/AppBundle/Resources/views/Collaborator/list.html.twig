@@ -1,0 +1,70 @@
+{% extends 'AppBundle::base.html.twig' %}
+{% trans_default_domain 'form' %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">{{ 'collaborator.list'|trans({}, 'dashboard') }}
+                    <small><a href="{{ path('search_create') }}">{{ 'collaborator.new'|trans({}, 'dashboard') }}</a>
+                    </small>
+                </h1>
+            </div>
+        </div>
+
+        {% for row in collaborators|batch(4) %}
+            <div class="row">
+                {% for collaborator in row %}
+                    {# @var collaborator \AppBundle\Entity\Company\Collaborator #}
+                    <div class="col-md-3 portfolio-item">
+                        <h3>
+                            <small>
+                                <a href="{{ path('collaborator_edit', {'id': collaborator.id}) }}">
+                                    <span
+                                            class="glyphicon glyphicon-edit"
+                                            data-toggle="tooltip"
+                                            data-placement="top"
+                                            title="{{ 'form.submit.edit'|trans }}"
+                                    >
+                                    </span>
+                                </a>
+                                <a href="{{ path('collaborator_view', {'id': collaborator.id}) }}">
+                                    <span
+                                            class="glyphicon glyphicon-eye-open"
+                                            data-toggle="tooltip"
+                                            data-placement="top"
+                                            title="{{ 'form.submit.view'|trans }}"
+                                    >
+                                    </span>
+                                </a>
+                            </small>
+                            {{ collaborator.name|title }}
+                        </h3>
+                        {% if collaborator.hasEmail %}
+                            <p>
+                                <span class="glyphicon glyphicon-envelope"></span>&nbsp;{{ collaborator.email }}
+                            </p>
+                        {% endif %}
+                        {% if collaborator.hasPhone %}
+                            <p>
+                                <span class="glyphicon glyphicon-phone"></span>&nbsp;{{ phone_number_format(collaborator.phone, 'NATIONAL') }}
+                            </p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            {% if not loop.last %}
+                <hr>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock content %}
+
+{% block foot_javascripts %}
+    {{ parent() }}
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+{% endblock foot_javascripts %}

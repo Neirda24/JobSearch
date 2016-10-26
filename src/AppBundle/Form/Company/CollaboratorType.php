@@ -3,6 +3,7 @@
 namespace AppBundle\Form\Company;
 
 use AppBundle\Entity\Company\Collaborator;
+use libphonenumber\PhoneNumberFormat;
 use Misd\PhoneNumberBundle\Form\Type\PhoneNumberType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CountryType;
@@ -18,7 +19,7 @@ class CollaboratorType extends AbstractType
      * @var TokenStorageInterface
      */
     private $tokenStorage;
-    
+
     /**
      * AddressType constructor.
      *
@@ -28,7 +29,7 @@ class CollaboratorType extends AbstractType
     {
         $this->tokenStorage = $tokenStorage;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -45,13 +46,16 @@ class CollaboratorType extends AbstractType
                 'required' => false,
             ])
             ->add('phone', PhoneNumberType::class, [
-                'required' => false,
+                'required'       => false,
+                'default_region' => 'FR',
+                'format'         => PhoneNumberFormat::NATIONAL,
             ])
             ->add('country', CountryType::class, [
                 'required' => true,
-            ]);
+            ])
+        ;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -64,7 +68,7 @@ class CollaboratorType extends AbstractType
             'cascade_validation' => true,
         ]);
     }
-    
+
     /**
      * {@inheritdoc}
      */

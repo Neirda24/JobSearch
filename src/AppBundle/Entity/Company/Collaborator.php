@@ -9,6 +9,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use libphonenumber\PhoneNumber;
 use LogicException;
 use Misd\PhoneNumberBundle\Validator\Constraints\PhoneNumber as AssertPhoneNumber;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -69,11 +70,11 @@ class Collaborator
     private $email;
 
     /**
-     * @var string
+     * @var PhoneNumber
      *
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="phone_number", nullable=true)
      *
-     * @AssertPhoneNumber(defaultRegion="FR", path="country")
+     * @AssertPhoneNumber(defaultRegion="FR", regionProperty="country")
      */
     private $phone;
 
@@ -162,6 +163,14 @@ class Collaborator
     }
 
     /**
+     * @return boolean
+     */
+    public function hasFirstname()
+    {
+        return (null !== $this->firstname);
+    }
+
+    /**
      * @return string
      */
     public function getFirstname()
@@ -172,9 +181,17 @@ class Collaborator
     /**
      * @param string $firstname
      */
-    public function setFirstname(string $firstname)
+    public function setFirstname($firstname)
     {
         $this->firstname = $firstname;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function hasLastname()
+    {
+        return (null !== $this->lastname);
     }
 
     /**
@@ -188,9 +205,39 @@ class Collaborator
     /**
      * @param string $lastname
      */
-    public function setLastname(string $lastname)
+    public function setLastname($lastname)
     {
         $this->lastname = $lastname;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        $result = '';
+
+        if ($this->hasFirstname()) {
+            $result .= $this->getFirstname();
+        }
+
+        if ($this->hasFirstname() && $this->hasLastname()) {
+            $result .= ' ';
+        }
+
+        if ($this->hasLastname()) {
+            $result .= $this->getLastname();
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function hasEmail()
+    {
+        return (null !== $this->email);
     }
 
     /**
@@ -204,9 +251,17 @@ class Collaborator
     /**
      * @param string $email
      */
-    public function setEmail(string $email)
+    public function setEmail($email)
     {
         $this->email = $email;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function hasPhone()
+    {
+        return (null !== $this->phone);
     }
 
     /**
@@ -220,7 +275,7 @@ class Collaborator
     /**
      * @param string $phone
      */
-    public function setPhone(string $phone)
+    public function setPhone($phone)
     {
         $this->phone = $phone;
     }
@@ -255,6 +310,20 @@ class Collaborator
     public function setAddedBy(User $addedBy)
     {
         $this->addedBy = $addedBy;
+    }
+
+    /**
+     * @param User|null $user
+     *
+     * @return bool|null
+     */
+    public function wasAddedBy(User $user = null)
+    {
+        if (null !== $user && null !== $this->addedBy) {
+            return ($this->addedBy->getId() === $user->getId());
+        }
+
+        return false;
     }
 
     /**

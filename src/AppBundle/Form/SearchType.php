@@ -29,9 +29,10 @@ class SearchType extends AbstractType
                 'required' => false,
                 'widget'   => 'single_text',
                 'html5'    => false,
-            ]);
+            ])
+        ;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -44,7 +45,7 @@ class SearchType extends AbstractType
             'cascade_validation' => true,
         ]);
     }
-    
+
     /**
      * {@inheritdoc}
      */

@@ -7,6 +7,10 @@
                 <source>form.submit.create</source>
                 <target>Créer</target>
             </trans-unit>
+            <trans-unit id="form_submit_edit">
+                <source>form.submit.edit</source>
+                <target>Éditer</target>
+            </trans-unit>
             <trans-unit id="form_submit_update">
                 <source>form.submit.update</source>
                 <target>Mettre à jour</target>
@@ -102,6 +106,28 @@
             <trans-unit id="form_address_country">
                 <source>form.address.country</source>
                 <target>Pays</target>
+            </trans-unit>
+
+            <!-- Collaborator -->
+            <trans-unit id="form_collaborator_firstname">
+                <source>form.collaborator.firstname</source>
+                <target>Prénom</target>
+            </trans-unit>
+            <trans-unit id="form_collaborator_lastname">
+                <source>form.collaborator.lastname</source>
+                <target>Nom de famille</target>
+            </trans-unit>
+            <trans-unit id="form_collaborator_email">
+                <source>form.collaborator.email</source>
+                <target>Email</target>
+            </trans-unit>
+            <trans-unit id="form_collaborator_phone">
+                <source>form.collaborator.phone</source>
+                <target>Téléphone</target>
+            </trans-unit>
+            <trans-unit id="form_collaborator_country">
+                <source>form.collaborator.country</source>
+                <target>Pays du contact</target>
             </trans-unit>
         </body>
     </file>

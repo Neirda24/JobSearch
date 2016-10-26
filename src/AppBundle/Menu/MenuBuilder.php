@@ -12,12 +12,12 @@ class MenuBuilder
      * @var FactoryInterface
      */
     private $factory;
-    
+
     /**
      * @var AuthorizationCheckerInterface
      */
     private $authorizationChecker;
-    
+
     /**
      * MenuBuilder constructor.
      *
@@ -29,7 +29,7 @@ class MenuBuilder
         $this->factory              = $factory;
         $this->authorizationChecker = $authorizationChecker;
     }
-    
+
     /**
      * @return ItemInterface
      */
@@ -37,9 +37,10 @@ class MenuBuilder
     {
         $menu = $this->factory->createItem('root');
         $menu->setChildrenAttribute('class', 'nav navbar-nav navbar-right');
-        
+
         if ($this->authorizationChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             $menu->addChild('dashboard.title', ['route' => 'dashboard'])->setAttribute('icon', 'fa fa-list');
+            $menu->addChild('contacts.title', ['route' => 'collaborator_list'])->setAttribute('icon', 'fa fa-list');
             $menu->addChild('layout.logout', ['route' => 'fos_user_security_logout'])->setExtra('translation_domain', 'FOSUserBundle');
         } else {
             $menu->addChild('layout.register', ['route' => 'fos_user_registration_register'])->setExtra('translation_domain', 'FOSUserBundle');
@@ -47,7 +48,7 @@ class MenuBuilder
                 ->setExtra('translation_domain', 'FOSUserBundle')
                 ->setAttribute('icon', 'fa fa-user');
         }
-        
+
         return $menu;
     }
 }

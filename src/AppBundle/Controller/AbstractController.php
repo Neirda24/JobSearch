@@ -15,10 +15,10 @@ abstract class AbstractController extends Controller
     protected function addFlash($type, $message, array $parameters = [], string $domain = 'messages')
     {
         $message = $this->get('translator')->trans($message, $parameters, $domain);
-        
+
         parent::addFlash($type, $message);
     }
-    
+
     /**
      * @param string $key
      * @param array  $parameters
@@ -29,7 +29,7 @@ abstract class AbstractController extends Controller
     protected function createFormError(string $key, array $parameters = [], string $domain = 'validators')
     {
         $message = $this->get('translator')->trans($key, $parameters, $domain);
-        
+
         return new FormError($message);
     }
 }
