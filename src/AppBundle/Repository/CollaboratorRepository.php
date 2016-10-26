@@ -20,7 +20,7 @@ class CollaboratorRepository extends EntityRepository implements TokenStorageAwa
      * @var TokenStorageInterface
      */
     private $tokenStorage;
-    
+
     /**
      * @param TokenStorageInterface $tokenStorage
      */
@@ -28,7 +28,7 @@ class CollaboratorRepository extends EntityRepository implements TokenStorageAwa
     {
         $this->tokenStorage = $tokenStorage;
     }
-    
+
     /**
      * @return User
      * @throws AccessDeniedException
@@ -38,14 +38,14 @@ class CollaboratorRepository extends EntityRepository implements TokenStorageAwa
         if (null === $token = $this->tokenStorage->getToken()) {
             throw new AccessDeniedException('You must be connected to access this resource.');
         }
-        
+
         if (!is_object($user = $token->getUser())) {
             throw new AccessDeniedException('You must be connected to access this resource.');
         }
-        
+
         return $user;
     }
-    
+
     /**
      * @param User $user
      *
@@ -54,7 +54,7 @@ class CollaboratorRepository extends EntityRepository implements TokenStorageAwa
     public function fetchByUserQB(User $user)
     {
         $qb = $this->createQueryBuilder('c');
-        
+
         $qb
             ->leftJoin('c.searchDetails', 'sd')
             ->leftJoin('sd.search', 's')
@@ -62,10 +62,10 @@ class CollaboratorRepository extends EntityRepository implements TokenStorageAwa
             ->where($qb->expr()->eq('u', ':user'))
             ->setParameter('user', $user)
             ->orderBy('c.firstname');
-        
+
         return $qb;
     }
-    
+
     /**
      * @return QueryBuilder
      *

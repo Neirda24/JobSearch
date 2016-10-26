@@ -4,11 +4,16 @@ namespace AppBundle\Entity\Company;
 
 use AppBundle\Entity\Search;
 use AppBundle\Entity\Search\Details;
+use AppBundle\Entity\User;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use LogicException;
+use Misd\PhoneNumberBundle\Validator\Constraints\PhoneNumber as AssertPhoneNumber;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Traversable;
 
 /**
  * @ORM\Table(name="collaborator")
@@ -25,35 +30,35 @@ class Collaborator
      * @ORM\GeneratedValue(strategy="UUID")
      */
     private $id;
-    
+
     /**
      * @var DateTime
      *
      * @ORM\Column(type="datetime", nullable=false)
      */
     private $createdAt;
-    
+
     /**
      * @var Search[]
      *
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Search\Details", inversedBy="collaborators")
      */
     private $searchDetails;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $firstname;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $lastname;
-    
+
     /**
      * @var string
      *
@@ -62,14 +67,32 @@ class Collaborator
      * @Assert\Email(checkHost=true, checkMX=true, strict="true")
      */
     private $email;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(type="string", length=255, nullable=true)
+     *
+     * @AssertPhoneNumber(defaultRegion="FR", path="country")
      */
     private $phone;
-    
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=2, nullable=false)
+     */
+    private $country;
+
+    /**
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="submittedCollaborators")
+     * @ORM\JoinColumn(nullable=false)
+     * @Assert\Valid(traverse=true)
+     */
+    private $addedBy;
+
     /**
      * Collaborator constructor.
      */
@@ -77,7 +100,7 @@ class Collaborator
     {
         $this->searchDetails = new ArrayCollection();
     }
-    
+
     /**
      * @return integer
      */
@@ -85,7 +108,7 @@ class Collaborator
     {
         return $this->id;
     }
-    
+
     /**
      * @return DateTime
      */
@@ -93,7 +116,7 @@ class Collaborator
     {
         return $this->createdAt;
     }
-    
+
     /**
      * @param DateTime $createdAt
      */
@@ -101,7 +124,7 @@ class Collaborator
     {
         $this->createdAt = $createdAt;
     }
-    
+
     /**
      * @return Search[]
      */
@@ -109,15 +132,24 @@ class Collaborator
     {
         return $this->searchDetails;
     }
-    
+
     /**
      * @param Search[] $searchDetails
+     *
+     * @throws LogicException
      */
-    public function setSearchDetails(array $searchDetails)
+    public function setSearchDetails($searchDetails)
     {
-        $this->searchDetails = $searchDetails;
+        if (!is_array($searchDetails) && !$searchDetails instanceof Traversable) {
+            throw new LogicException(sprintf('Expected array or traversable got [%s]', get_class($searchDetails)));
+        }
+        if ($searchDetails instanceof Collection) {
+            $searchDetails = $searchDetails->toArray();
+        }
+
+        array_walk($searchDetails, [$this, 'addSearchDetails']);
     }
-    
+
     /**
      * @param Details $searchDetails
      */
@@ -128,7 +160,7 @@ class Collaborator
             $searchDetails->addCollaborator($this);
         }
     }
-    
+
     /**
      * @return string
      */
@@ -136,7 +168,7 @@ class Collaborator
     {
         return $this->firstname;
     }
-    
+
     /**
      * @param string $firstname
      */
@@ -144,7 +176,7 @@ class Collaborator
     {
         $this->firstname = $firstname;
     }
-    
+
     /**
      * @return string
      */
@@ -152,7 +184,7 @@ class Collaborator
     {
         return $this->lastname;
     }
-    
+
     /**
      * @param string $lastname
      */
@@ -160,7 +192,7 @@ class Collaborator
     {
         $this->lastname = $lastname;
     }
-    
+
     /**
      * @return string
      */
@@ -168,7 +200,7 @@ class Collaborator
     {
         return $this->email;
     }
-    
+
     /**
      * @param string $email
      */
@@ -176,7 +208,7 @@ class Collaborator
     {
         $this->email = $email;
     }
-    
+
     /**
      * @return string
      */
@@ -184,7 +216,7 @@ class Collaborator
     {
         return $this->phone;
     }
-    
+
     /**
      * @param string $phone
      */
@@ -192,7 +224,39 @@ class Collaborator
     {
         $this->phone = $phone;
     }
-    
+
+    /**
+     * @return string
+     */
+    public function getCountry()
+    {
+        return $this->country;
+    }
+
+    /**
+     * @param string $country
+     */
+    public function setCountry(string $country)
+    {
+        $this->country = $country;
+    }
+
+    /**
+     * @return User
+     */
+    public function getAddedBy()
+    {
+        return $this->addedBy;
+    }
+
+    /**
+     * @param User $addedBy
+     */
+    public function setAddedBy(User $addedBy)
+    {
+        $this->addedBy = $addedBy;
+    }
+
     /**
      * @ORM\PrePersist()
      */
@@ -200,7 +264,7 @@ class Collaborator
     {
         $this->setCreatedAt(new DateTime('now'));
     }
-    
+
     /**
      * @Assert\Callback()
      *
@@ -213,20 +277,20 @@ class Collaborator
             'firstname',
             'lastname'
         ];
-        
+
         foreach ($fieldsToCheck as $fieldToCheck) {
             $value = $this->$fieldToCheck;
-            
+
             if ('' !== trim($value)) {
                 return;
             }
         }
-        
+
         $context->buildViolation('The collaborator should have at least a firstname or a lastname.')
             ->atPath('firstName')
             ->addViolation();
     }
-    
+
     /**
      * @return string
      */
@@ -236,36 +300,36 @@ class Collaborator
         if (null !== $this->getFirstname()) {
             $result .= $this->getFirstname();
         }
-        
+
         if (null !== $this->getLastname()) {
             if ('' !== trim($result)) {
                 $result .= ' ';
             }
-            
+
             $result .= $this->getLastname();
         }
-        
+
         if ('' !== trim($this->getEmail()) || '' !== trim($this->getPhone())) {
             if ('' !== trim($result)) {
                 $result .= ' <';
             }
-            
+
             if ('' !== trim($this->getEmail())) {
                 $result .= $this->getEmail();
             }
-            
+
             if ('' !== trim($this->getPhone())) {
                 if ('' !== trim($this->getEmail())) {
                     $result .= ', ';
                 }
                 $result .= $this->getPhone();
             }
-            
+
             if ('' !== trim($result)) {
                 $result .= '>';
             }
         }
-        
+
         return $result;
     }
 }

@@ -18,7 +18,7 @@
     },
     "require": {
         "php": ">=5.5.9",
-        "symfony/symfony": "3.1.*",
+        "symfony/symfony": "~3",
         "doctrine/orm": "^2.5",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/doctrine-cache-bundle": "^1.2",
@@ -41,7 +41,8 @@
         "components/jquery": "1.11.1",
         "symfony/assetic-bundle": "^2.8",
         "erusev/parsedown": "^1.6",
-        "twig/extensions": "^1.4"
+        "twig/extensions": "^1.4",
+        "misd/phone-number-bundle": "dev-master"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
@@ -91,6 +92,10 @@
                     "reference": ""
                 }
             }
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Neirda24/phone-number-bundle.git"
         }
     ]
 }

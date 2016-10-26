@@ -7,8 +7,11 @@ use AppBundle\Entity\Company\Collaborator;
 use AppBundle\Entity\Search;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use LogicException;
 use Symfony\Component\Validator\Constraints as Assert;
+use Traversable;
 
 /**
  * @ORM\Entity
@@ -25,7 +28,7 @@ class Details
      * @ORM\GeneratedValue(strategy="UUID")
      */
     private $id;
-    
+
     /**
      * @var Search
      *
@@ -33,7 +36,7 @@ class Details
      * @ORM\JoinColumn(nullable=false)
      */
     private $search;
-    
+
     /**
      * @var Company
      *
@@ -41,28 +44,28 @@ class Details
      * @ORM\JoinColumn(nullable=false)
      */
     private $company;
-    
+
     /**
      * @var Collaborator[]
      *
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Company\Collaborator", mappedBy="searchDetails")
      */
     private $collaborators;
-    
+
     /**
      * @var DateTime
      *
      * @ORM\Column(type="datetime", nullable=false)
      */
     private $createdAt;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(type="text", nullable=true)
      */
     private $description;
-    
+
     /**
      * Details constructor.
      */
@@ -70,7 +73,7 @@ class Details
     {
         $this->collaborators = new ArrayCollection();
     }
-    
+
     /**
      * @return string
      */
@@ -78,7 +81,7 @@ class Details
     {
         return $this->id;
     }
-    
+
     /**
      * @return Search
      */
@@ -86,7 +89,7 @@ class Details
     {
         return $this->search;
     }
-    
+
     /**
      * @param Search $search
      */
@@ -94,7 +97,7 @@ class Details
     {
         $this->search = $search;
     }
-    
+
     /**
      * @return Collaborator[]
      */
@@ -102,15 +105,27 @@ class Details
     {
         return $this->collaborators;
     }
-    
+
     /**
      * @param Collaborator[] $collaborators
+     *
+     * @throws LogicException
      */
-    public function setCollaborators(array $collaborators)
+    public function setCollaborators($collaborators)
     {
-        $this->collaborators = $collaborators;
+        if (!is_array($collaborators) && !$collaborators instanceof Traversable) {
+            throw new LogicException(sprintf('Expected array or traversable got [%s]', get_class($collaborators)));
+        }
+        if ($collaborators instanceof Collection) {
+            $collaborators = $collaborators->toArray();
+        }
+
+        array_walk($collaborators, [$this, 'addCollaborator']);
     }
-    
+
+    /**
+     * @param Collaborator $collaborator
+     */
     public function addCollaborator(Collaborator $collaborator)
     {
         if (!$this->collaborators->contains($collaborator)) {
@@ -118,7 +133,7 @@ class Details
             $collaborator->addSearchDetails($this);
         }
     }
-    
+
     /**
      * @return DateTime
      */
@@ -126,7 +141,7 @@ class Details
     {
         return $this->createdAt;
     }
-    
+
     /**
      * @param DateTime $createdAt
      */
@@ -134,7 +149,7 @@ class Details
     {
         $this->createdAt = $createdAt;
     }
-    
+
     /**
      * @return Company[]|ArrayCollection
      */
@@ -144,7 +159,7 @@ class Details
             return $collaborator->getCompany();
         });
     }
-    
+
     /**
      * @return string
      */
@@ -152,7 +167,7 @@ class Details
     {
         return $this->description;
     }
-    
+
     /**
      * @param string $description
      */
@@ -160,7 +175,7 @@ class Details
     {
         $this->description = $description;
     }
-    
+
     /**
      * @return Company
      */
@@ -168,7 +183,7 @@ class Details
     {
         return $this->company;
     }
-    
+
     /**
      * @param Company $company
      */
@@ -177,7 +192,7 @@ class Details
         $this->company = $company;
         $company->addSearchDetails($this);
     }
-    
+
     /**
      * @ORM\PrePersist()
      */

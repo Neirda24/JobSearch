@@ -27,12 +27,13 @@ class DetailsType extends AbstractType
                 'required'      => false,
                 'expanded'      => false,
                 'multiple'      => true,
+                'by_reference' => false,
             ])
             ->add('description', TextareaType::class, [
                 'required' => false,
             ]);
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -45,7 +46,7 @@ class DetailsType extends AbstractType
             'cascade_validation' => true,
         ]);
     }
-    
+
     /**
      * {@inheritdoc}
      */

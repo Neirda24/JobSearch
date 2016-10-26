@@ -41,6 +41,18 @@
                 <source>form.search.details.add</source>
                 <target>Ajouter un échange</target>
             </trans-unit>
+            <trans-unit id="form_search_details_title">
+                <source>form.search.details.title</source>
+                <target>Quel était votre échange ?</target>
+            </trans-unit>
+            <trans-unit id="form_search_details_collaborators">
+                <source>form.search.details.collaborators</source>
+                <target>Qui était vos interlocuteurs ?</target>
+            </trans-unit>
+            <trans-unit id="form_search_details_description">
+                <source>form.search.details.description</source>
+                <target>Détails</target>
+            </trans-unit>
 
             <!-- Company -->
             <trans-unit id="form_company_title">

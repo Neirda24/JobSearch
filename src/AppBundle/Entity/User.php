@@ -5,8 +5,11 @@ namespace AppBundle\Entity;
 use AppBundle\Entity\Company\Collaborator;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
+use LogicException;
+use Traversable;
 
 /**
  * @ORM\Entity
@@ -18,7 +21,7 @@ class User extends BaseUser
      * @var string
      */
     const ROLE_ADMIN = 'ROLE_ADMIN';
-    
+
     /**
      * @var string
      *
@@ -27,14 +30,14 @@ class User extends BaseUser
      * @ORM\GeneratedValue(strategy="UUID")
      */
     protected $id;
-    
+
     /**
      * @var DateTime
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $validatedAt;
-    
+
     /**
      * @var Company[]
      *
@@ -42,7 +45,15 @@ class User extends BaseUser
      * @ORM\JoinColumn(nullable=true)
      */
     private $submittedCompanies;
-    
+
+    /**
+     * @var Collaborator[]
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Company\Collaborator", mappedBy="addedBy")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $submittedCollaborators;
+
     /**
      * @var Company[]
      *
@@ -50,25 +61,26 @@ class User extends BaseUser
      * @ORM\JoinColumn(nullable=true)
      */
     private $companiesOwned;
-    
+
     /**
      * @var Search[]
      *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Search", mappedBy="owner")
      */
     private $searches;
-    
+
     /**
      * User constructor.
      */
     public function __construct()
     {
         parent::__construct();
-        $this->submittedCompanies = new ArrayCollection();
-        $this->companiesOwned     = new ArrayCollection();
-        $this->searches           = new ArrayCollection();
+        $this->submittedCompanies     = new ArrayCollection();
+        $this->submittedCollaborators = new ArrayCollection();
+        $this->companiesOwned         = new ArrayCollection();
+        $this->searches               = new ArrayCollection();
     }
-    
+
     /**
      * @return DateTime
      */
@@ -76,7 +88,7 @@ class User extends BaseUser
     {
         return $this->validatedAt;
     }
-    
+
     /**
      * @param DateTime $validatedAt
      */
@@ -84,7 +96,7 @@ class User extends BaseUser
     {
         $this->validatedAt = $validatedAt;
     }
-    
+
     /**
      * @return Company[]
      */
@@ -92,15 +104,24 @@ class User extends BaseUser
     {
         return $this->submittedCompanies;
     }
-    
+
     /**
      * @param Company[] $submittedCompanies
+     *
+     * @throws LogicException
      */
-    public function setSubmittedCompanies(array $submittedCompanies)
+    public function setSubmittedCompanies($submittedCompanies)
     {
-        $this->submittedCompanies = $submittedCompanies;
+        if (!is_array($submittedCompanies) && !$submittedCompanies instanceof Traversable) {
+            throw new LogicException(sprintf('Expected array or traversable got [%s]', get_class($submittedCompanies)));
+        }
+        if ($submittedCompanies instanceof Collection) {
+            $submittedCompanies = $submittedCompanies->toArray();
+        }
+
+        array_walk($submittedCompanies, [$this, 'addSubmittedCompany']);
     }
-    
+
     /**
      * @param Company $company
      *
@@ -110,7 +131,7 @@ class User extends BaseUser
     {
         return $this->submittedCompanies->contains($company);
     }
-    
+
     /**
      * @param Company $submittedCompany
      */
@@ -120,7 +141,53 @@ class User extends BaseUser
             $this->submittedCompanies->add($submittedCompany);
         }
     }
-    
+
+    /**
+     * @return Collaborator[]
+     */
+    public function getSubmittedCollaborators()
+    {
+        return $this->submittedCollaborators;
+    }
+
+    /**
+     * @param Collaborator[] $submittedCollaborators
+     *
+     * @throws LogicException
+     */
+    public function setSubmittedCollaborators($submittedCollaborators)
+    {
+        if (!is_array($submittedCollaborators) && !$submittedCollaborators instanceof Traversable) {
+            throw new LogicException(sprintf('Expected array or traversable got [%s]', get_class($submittedCollaborators)));
+        }
+        if ($submittedCollaborators instanceof Collection) {
+            $submittedCollaborators = $submittedCollaborators->toArray();
+        }
+
+
+        array_walk($submittedCollaborators, [$this, 'addSubmittedCollaborator']);
+    }
+
+    /**
+     * @param Collaborator $collaborator
+     *
+     * @return bool
+     */
+    public function hasSubmittedCollaborator(Collaborator $collaborator)
+    {
+        return $this->submittedCollaborators->contains($collaborator);
+    }
+
+    /**
+     * @param Collaborator $submittedCollaborator
+     */
+    public function addSubmittedCollaborator(Collaborator $submittedCollaborator)
+    {
+        if (!$this->hasSubmittedCollaborator($submittedCollaborator)) {
+            $this->submittedCollaborators->add($submittedCollaborator);
+        }
+    }
+
     /**
      * @return Company[]
      */
@@ -128,7 +195,7 @@ class User extends BaseUser
     {
         return $this->companiesOwned;
     }
-    
+
     /**
      * @param Company[] $companiesOwned
      */
@@ -136,7 +203,7 @@ class User extends BaseUser
     {
         $this->companiesOwned = $companiesOwned;
     }
-    
+
     /**
      * @return Search[]
      */
@@ -144,7 +211,7 @@ class User extends BaseUser
     {
         return $this->searches;
     }
-    
+
     /**
      * @return Search[]|ArrayCollection
      */
@@ -154,7 +221,7 @@ class User extends BaseUser
             return (false === $search->isClosed());
         });
     }
-    
+
     /**
      * @return Search[]|ArrayCollection
      */
@@ -164,7 +231,7 @@ class User extends BaseUser
             return (true === $search->isClosed());
         });
     }
-    
+
     /**
      * @param Search[] $searches
      */

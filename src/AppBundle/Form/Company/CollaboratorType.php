@@ -3,9 +3,10 @@
 namespace AppBundle\Form\Company;
 
 use AppBundle\Entity\Company\Collaborator;
-use AppBundle\Entity\User;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Misd\PhoneNumberBundle\Form\Type\PhoneNumberType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CountryType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -35,6 +36,18 @@ class CollaboratorType extends AbstractType
     {
         $builder
             ->add('firstname', TextType::class, [
+                'required' => true,
+            ])
+            ->add('lastname', TextType::class, [
+                'required' => true,
+            ])
+            ->add('email', EmailType::class, [
+                'required' => false,
+            ])
+            ->add('phone', PhoneNumberType::class, [
+                'required' => false,
+            ])
+            ->add('country', CountryType::class, [
                 'required' => true,
             ]);
     }

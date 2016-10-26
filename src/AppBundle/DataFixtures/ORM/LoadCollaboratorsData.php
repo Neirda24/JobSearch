@@ -29,22 +29,24 @@ class LoadCollaboratorsData extends AbstractFixture implements OrderedFixtureInt
                 ],
             ],
         ];
-        
+
         foreach ($collaborators as $firstname => $config) {
             $collaborator = new Collaborator();
+            $collaborator->setCountry('FR');
             $collaborator->setFirstname($firstname);
-            
+            $collaborator->setAddedBy($this->getReference('user-neirda24'));
+
             foreach ($config['searches'] as $searchReference) {
                 $collaborator->addSearchDetails($this->getReference($searchReference));
             }
-            
+
             $manager->persist($collaborator);
-            
+
             $this->addReference('collaborator-' . $firstname, $collaborator);
         }
         $manager->flush();
     }
-    
+
     /**
      * {@inheritdoc}
      */
